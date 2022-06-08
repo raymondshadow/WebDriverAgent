@@ -206,6 +206,7 @@
   [self verifyGesture:gesture orientation:UIDeviceOrientationLandscapeLeft];
 }
 
+// Note: UIDeviceOrientationLandscapeRight is not so good in iOS 16?
 - (void)testPress
 {
   NSArray<NSDictionary<NSString *, id> *> *gesture =
@@ -269,6 +270,7 @@
   [self verifyGesture:gesture orientation:orientation];
 }
 
+// Failed to press in iOS 16
 - (void)testForcePress
 {
   NSArray<NSDictionary<NSString *, id> *> *gesture =

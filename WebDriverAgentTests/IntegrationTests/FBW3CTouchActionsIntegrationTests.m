@@ -293,6 +293,8 @@
   [self verifyGesture:gesture orientation:UIDeviceOrientationPortrait];
 }
 
+// Note: UIDeviceOrientationLandscapeLeft did not work in iOS 16 simumlator.
+// UIDeviceOrientationPortrait was ok.
 - (void)testDoubleTap
 {
   NSArray<NSDictionary<NSString *, id> *> *gesture =
@@ -315,6 +317,8 @@
   [self verifyGesture:gesture orientation:UIDeviceOrientationLandscapeLeft];
 }
 
+// Note: UIDeviceOrientationLandscapeRight did not work in iOS 16 simumlator.
+// UIDeviceOrientationPortrait was ok.
 - (void)testLongPressWithCombinedPause
 {
   NSArray<NSDictionary<NSString *, id> *> *gesture =

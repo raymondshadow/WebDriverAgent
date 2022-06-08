@@ -51,6 +51,7 @@
   [super tearDown];
 }
 
+// Failed in iOS 16
 - (void)testForceTap
 {
   [self verifyForceTapWithOrientation:UIDeviceOrientationPortrait];
