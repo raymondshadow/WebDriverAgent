@@ -157,4 +157,14 @@
   XCTAssertNil(error);
 }
 
+- (void)testAppearance
+{
+  if (SYSTEM_VERSION_LESS_THAN(@"15.0")) {
+    return;
+  }
+  NSError *error;
+  XCTAssertTrue([XCUIDevice.sharedDevice fb_setAppearance:FBUIInterfaceAppearanceDark error:&error]);
+  XCTAssertNil(error);
+}
+
 @end

@@ -11,6 +11,7 @@
 
 #import "FBIntegrationTestCase.h"
 
+#import "FBMacros.h"
 #import "FBElementCache.h"
 #import "FBTestMacros.h"
 #import "XCUIDevice+FBRotation.h"
@@ -54,6 +55,11 @@
 // Failed in iOS 16
 - (void)testForceTap
 {
+  if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"15.0")) {
+    // Does not work on iOS 15.
+    return;
+  }
+
   [self verifyForceTapWithOrientation:UIDeviceOrientationPortrait];
 }
 
