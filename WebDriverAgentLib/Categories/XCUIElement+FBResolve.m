@@ -41,7 +41,7 @@ static char XCUIELEMENT_IS_RESOLVED_NATIVELY_KEY;
   XCUIElementQuery *query = [self isKindOfClass:XCUIApplication.class]
     ? self.application.fb_query
     : [self.application.fb_query descendantsMatchingType:XCUIElementTypeAny];
-  XCElementSnapshot *cachedSnapshot = self.fb_cachedSnapshot;
+  FBXCElementSnapshotWrapper *cachedSnapshot = [FBXCElementSnapshotWrapper ensureWrapped:self.fb_cachedSnapshot];
   NSString *uid = nil == cachedSnapshot ? self.fb_uid : cachedSnapshot.fb_uid;
   return nil == uid
     ? self

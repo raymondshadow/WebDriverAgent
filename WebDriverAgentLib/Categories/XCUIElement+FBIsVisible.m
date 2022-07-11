@@ -14,8 +14,8 @@
 #import "FBMathUtils.h"
 #import "FBActiveAppDetectionPoint.h"
 #import "FBSession.h"
+#import "FBXCAccessibilityElement.h"
 #import "FBXCodeCompatibility.h"
-#import "XCAccessibilityElement+FBComparison.h"
 #import "XCElementSnapshot+FBHelpers.h"
 #import "XCElementSnapshot+FBHitPoint.h"
 #import "XCUIElement+FBUtilities.h"
@@ -26,13 +26,14 @@
 
 - (BOOL)fb_isVisible
 {
-  return [self fb_snapshotWithAttributes:@[FB_XCAXAIsVisibleAttributeName]
-                                maxDepth:@1].fb_isVisible;
+  id<FBXCElementSnapshot> snapshot = [self fb_snapshotWithAttributes:@[FB_XCAXAIsVisibleAttributeName]
+                                                            maxDepth:@1];
+  return [FBXCElementSnapshotWrapper ensureWrapped:snapshot].fb_isVisible;
 }
 
 @end
 
-@implementation XCElementSnapshot (FBIsVisible)
+@implementation FBXCElementSnapshotWrapper (FBIsVisible)
 
 - (NSString *)fb_uniqId
 {
@@ -197,13 +198,13 @@
     midPoint = FBInvertPointForApplication(midPoint, appFrame.size, FBApplication.fb_activeApplication.interfaceOrientation);
   }
 #endif
-  XCAccessibilityElement *hitElement = [FBActiveAppDetectionPoint axElementWithPoint:midPoint];
+  id<FBXCAccessibilityElement> hitElement = [FBActiveAppDetectionPoint axElementWithPoint:midPoint];
   if (nil != hitElement) {
-    if ([self.accessibilityElement fb_isEqualToElement:hitElement]) {
+    if (FBIsAXElementEqualToOther(self.accessibilityElement, hitElement)) {
       return [self fb_cacheVisibilityWithValue:YES forAncestors:ancestors];
     }
     for (XCElementSnapshot *ancestor in ancestors) {
-      if ([hitElement fb_isEqualToElement:ancestor.accessibilityElement]) {
+      if (FBIsAXElementEqualToOther(hitElement, ancestor.accessibilityElement)) {
         return [self fb_cacheVisibilityWithValue:YES forAncestors:ancestors];
       }
     }
@@ -211,7 +212,7 @@
   if (self.children.count > 0) {
     if (nil != hitElement) {
       for (XCElementSnapshot *descendant in self._allDescendants) {
-        if ([hitElement fb_isEqualToElement:descendant.accessibilityElement]) {
+        if (FBIsAXElementEqualToOther(hitElement, descendant.accessibilityElement)) {
           return [self fb_cacheVisibilityWithValue:YES forAncestors:descendant.fb_ancestors];
         }
       }

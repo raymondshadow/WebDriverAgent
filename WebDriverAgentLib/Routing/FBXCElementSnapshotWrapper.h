@@ -7,20 +7,17 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-#import <XCTest/XCTest.h>
-#import "XCAccessibilityElement.h"
+#import "FBXCElementSnapshot.h"
+#import "FBElement.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface XCAccessibilityElement (FBComparison)
+@interface FBXCElementSnapshotWrapper : NSObject<FBXCElementSnapshot, FBElement>
 
-/**
- Compares two XCAccessibilityElement instances
+@property (nonatomic, readonly) id<FBXCElementSnapshot> snapshot;
 
- @param other the other element instance
- @return YES if both elements are equal
- */
-- (BOOL)fb_isEqualToElement:(nullable XCAccessibilityElement *)other;
+- (instancetype)initWithSnapshot:(id<FBXCElementSnapshot>)snapshot;
++ (instancetype)ensureWrapped:(nullable id<FBXCElementSnapshot>)snapshot;
 
 @end
 

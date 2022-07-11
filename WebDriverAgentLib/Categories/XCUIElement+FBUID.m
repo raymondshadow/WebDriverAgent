@@ -19,16 +19,16 @@
 {
   return [self isKindOfClass:XCUIApplication.class]
     ? [FBElementUtils uidWithAccessibilityElement:[(XCUIApplication *)self accessibilityElement]]
-    : [self fb_takeSnapshot].fb_uid;
+    : [FBXCElementSnapshotWrapper ensureWrapped:[self fb_takeSnapshot]].fb_uid;
 }
 
 @end
 
-@implementation XCElementSnapshot (FBUID)
+@implementation FBXCElementSnapshotWrapper (FBUID)
 
 - (NSString *)fb_uid
 {
-  return [FBElementUtils uidWithAccessibilityElement:self.accessibilityElement];
+  return [FBElementUtils uidWithAccessibilityElement:[self accessibilityElement]];
 }
 
 @end

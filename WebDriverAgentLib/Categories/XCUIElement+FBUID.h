@@ -7,8 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-#import <WebDriverAgentLib/XCElementSnapshot.h>
-#import <WebDriverAgentLib/XCUIElement.h>
+#import "FBXCElementSnapshotWrapper.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -20,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@interface XCElementSnapshot (FBUID)
+@interface FBXCElementSnapshotWrapper (FBUID)
 
 /*! Represents unique internal element identifier, which is the same for an element and its snapshot */
 @property (nonatomic, nullable, readonly, copy) NSString *fb_uid;

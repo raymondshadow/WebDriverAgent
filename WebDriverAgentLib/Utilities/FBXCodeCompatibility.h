@@ -9,6 +9,7 @@
 
 #import <WebDriverAgentLib/WebDriverAgentLib.h>
 #import "XCPointerEvent.h"
+#import "FBXCElementSnapshotWrapper.h"
 
 /**
  The version of testmanagerd process which is running on the device.
@@ -32,9 +33,9 @@ NS_ASSUME_NONNULL_BEGIN
  Set of categories that patches method name differences between Xcode versions,
  so that WDA can be build with different Xcode versions.
  */
-@interface XCElementSnapshot (FBCompatibility)
+@interface FBXCElementSnapshotWrapper (FBCompatibility)
 
-+ (nullable SEL)fb_attributesForElementSnapshotKeyPathsSelector;
+- (nullable SEL)fb_attributesForElementSnapshotKeyPathsSelector;
 
 @end
 

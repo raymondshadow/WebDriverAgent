@@ -10,7 +10,6 @@
 #import "XCUIElement+FBAccessibility.h"
 
 #import "FBConfiguration.h"
-#import "XCElementSnapshot+FBHelpers.h"
 #import "XCTestPrivateSymbols.h"
 #import "XCUIElement+FBUtilities.h"
 
@@ -18,13 +17,14 @@
 
 - (BOOL)fb_isAccessibilityElement
 {
-  return [self fb_snapshotWithAttributes:@[FB_XCAXAIsElementAttributeName]
-                                maxDepth:@1].fb_isAccessibilityElement;
+  id<FBXCElementSnapshot> snapshot = [self fb_snapshotWithAttributes:@[FB_XCAXAIsElementAttributeName]
+                                                            maxDepth:@1];
+  return [FBXCElementSnapshotWrapper ensureWrapped:snapshot].fb_isAccessibilityElement;
 }
 
 @end
 
-@implementation XCElementSnapshot (FBAccessibility)
+@implementation FBXCElementSnapshotWrapper (FBAccessibility)
 
 - (BOOL)fb_isAccessibilityElement
 {

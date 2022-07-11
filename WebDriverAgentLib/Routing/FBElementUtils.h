@@ -9,7 +9,8 @@
 
 #import <Foundation/Foundation.h>
 #import <WebDriverAgentLib/FBElement.h>
-#import "XCAccessibilityElement.h"
+
+@protocol FBXCAccessibilityElement;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -53,7 +54,7 @@ extern NSString *const FBUnknownAttributeException;
  @param element accessiblity element instance
  @return the unique element identifier or nil if it cannot be retrieved
  */
-+ (nullable NSString *)uidWithAccessibilityElement:(XCAccessibilityElement *)element;
++ (nullable NSString *)uidWithAccessibilityElement:(id<FBXCAccessibilityElement>)element;
 
 @end
 

@@ -11,6 +11,7 @@
 
 #import <objc/runtime.h>
 
+#import "FBXCAccessibilityElement.h"
 #import "FBConfiguration.h"
 #import "FBLogger.h"
 #import "FBMacros.h"
@@ -62,10 +63,10 @@ static id FBAXClient = nil;
   return [FBAXClient _setAXTimeout:timeout error:error];
 }
 
-- (XCElementSnapshot *)snapshotForElement:(XCAccessibilityElement *)element
-                               attributes:(NSArray<NSString *> *)attributes
-                                 maxDepth:(nullable NSNumber *)maxDepth
-                                    error:(NSError **)error
+- (id<FBXCElementSnapshot>)snapshotForElement:(id<FBXCAccessibilityElement>)element
+                                   attributes:(NSArray<NSString *> *)attributes
+                                     maxDepth:(nullable NSNumber *)maxDepth
+                                        error:(NSError **)error
 {
   NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
   // Mimicking XCTest framework behavior (this attribute is added by default unless it is an excludingNonModalElements query)
@@ -82,16 +83,16 @@ static id FBAXClient = nil;
                                          attributes:attributes
                                          parameters:[parameters copy]
                                               error:error];
-  XCElementSnapshot *snapshot = [result valueForKey:@"_rootElementSnapshot"];
+  id<FBXCElementSnapshot> snapshot = [result valueForKey:@"_rootElementSnapshot"];
   return nil == snapshot ? result : snapshot;
 }
 
-- (NSArray<XCAccessibilityElement *> *)activeApplications
+- (NSArray<id<FBXCAccessibilityElement>> *)activeApplications
 {
   return [FBAXClient activeApplications];
 }
 
-- (XCAccessibilityElement *)systemApplication
+- (id<FBXCAccessibilityElement>)systemApplication
 {
   return [FBAXClient systemApplication];
 }
@@ -107,7 +108,7 @@ static id FBAXClient = nil;
   [FBAXClient notifyWhenNoAnimationsAreActiveForApplication:application reply:reply];
 }
 
-- (NSDictionary *)attributesForElement:(XCAccessibilityElement *)element
+- (NSDictionary *)attributesForElement:(id<FBXCAccessibilityElement>)element
                             attributes:(NSArray *)attributes
 {
   NSError *error = nil;

@@ -9,6 +9,7 @@
 
 #import <objc/runtime.h>
 
+#import "FBXCAccessibilityElement.h"
 #import "FBElementUtils.h"
 #import "FBElementTypeTransformer.h"
 
@@ -111,16 +112,16 @@ static NSString *const OBJC_PROP_ATTRIBS_SEPARATOR = @",";
 
 static BOOL FBShouldUsePayloadForUIDExtraction = YES;
 static dispatch_once_t oncePayloadToken;
-+ (NSString *)uidWithAccessibilityElement:(XCAccessibilityElement *)element
++ (NSString *)uidWithAccessibilityElement:(id<FBXCAccessibilityElement>)element
 {
   dispatch_once(&oncePayloadToken, ^{
-    FBShouldUsePayloadForUIDExtraction = [element respondsToSelector:@selector(payload)];
+    FBShouldUsePayloadForUIDExtraction = [(NSObject *)element respondsToSelector:@selector(payload)];
   });
   unsigned long long elementId;
   if (FBShouldUsePayloadForUIDExtraction) {
     elementId = [[element.payload objectForKey:@"uid.elementID"] longLongValue];
   } else {
-    elementId = [[element valueForKey:@"_elementID"] longLongValue];
+    elementId = [[(NSObject *)element valueForKey:@"_elementID"] longLongValue];
   }
   int processId = element.processIdentifier;
   if (elementId < 1 || processId < 1) {

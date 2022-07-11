@@ -19,9 +19,9 @@
 #import "FBMacros.h"
 #import "FBMathUtils.h"
 #import "FBScreenshot.h"
+#import "FBXCDeviceEvent.h"
 #import "FBXCodeCompatibility.h"
 #import "XCUIDevice.h"
-#import "XCDeviceEvent.h"
 
 static const NSTimeInterval FBHomeButtonCoolOffTime = 1.;
 static const NSTimeInterval FBScreenLockTimeout = 5.;
@@ -303,10 +303,8 @@ static bool fb_isLocked;
                             duration:(NSTimeInterval)duration
                                error:(NSError **)error
 {
-  XCDeviceEvent *event = [XCDeviceEvent deviceEventWithPage:page
-                                                      usage:usage
-                                                   duration:duration];
-  return [self performDeviceEvent:event error:error];
+  id<FBXCDeviceEvent> event = FBCreateXCDeviceEvent(page, usage, duration, error);
+  return nil == event ? NO : [self performDeviceEvent:event error:error];
 }
 
 - (BOOL)fb_setAppearance:(FBUIInterfaceAppearance)appearance error:(NSError **)error
