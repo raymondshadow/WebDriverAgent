@@ -46,8 +46,8 @@
 
   id<FBXCElementSnapshot> snapshot = matchingElement.fb_takeSnapshot;
   // Over iOS13, snapshot returns a child.
-  // The purpose of here is return a single element so replace children with nil for testing.
-  snapshot.children = nil;
+  // The purpose of here is return a single element to replace children with an empty array for testing.
+  snapshot.children = @[];
   return snapshot;
 }
 
