@@ -33,6 +33,7 @@
 		13DE7A5C287CA444003243C6 /* FBXCElementSnapshotWrapper+Helpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 13DE7A59287CA444003243C6 /* FBXCElementSnapshotWrapper+Helpers.h */; };
 		13DE7A5D287CA444003243C6 /* FBXCElementSnapshotWrapper+Helpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 13DE7A5A287CA444003243C6 /* FBXCElementSnapshotWrapper+Helpers.m */; };
 		13DE7A5E287CA444003243C6 /* FBXCElementSnapshotWrapper+Helpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 13DE7A5A287CA444003243C6 /* FBXCElementSnapshotWrapper+Helpers.m */; };
+		13FFF2F2287DBEE600E561E4 /* XCElementSnapshotDouble.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FFF2F1287DBEE600E561E4 /* XCElementSnapshotDouble.m */; };
 		315A15012518CB8700A3A064 /* TouchableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 315A15002518CB8700A3A064 /* TouchableView.m */; };
 		315A15072518CC2800A3A064 /* TouchSpotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 315A15062518CC2800A3A064 /* TouchSpotView.m */; };
 		315A150A2518D6F400A3A064 /* TouchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 315A15092518D6F400A3A064 /* TouchViewController.m */; };
@@ -912,6 +913,8 @@
 		13DE7A54287CA1EC003243C6 /* FBXCElementSnapshotWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBXCElementSnapshotWrapper.m; sourceTree = "<group>"; };
 		13DE7A59287CA444003243C6 /* FBXCElementSnapshotWrapper+Helpers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBXCElementSnapshotWrapper+Helpers.h"; sourceTree = "<group>"; };
 		13DE7A5A287CA444003243C6 /* FBXCElementSnapshotWrapper+Helpers.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "FBXCElementSnapshotWrapper+Helpers.m"; sourceTree = "<group>"; };
+		13FFF2F0287DBEE600E561E4 /* XCElementSnapshotDouble.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XCElementSnapshotDouble.h; sourceTree = "<group>"; };
+		13FFF2F1287DBEE600E561E4 /* XCElementSnapshotDouble.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XCElementSnapshotDouble.m; sourceTree = "<group>"; };
 		1BA7DD8C206D694B007C7C26 /* XCTElementSetTransformer-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "XCTElementSetTransformer-Protocol.h"; sourceTree = "<group>"; };
 		315A14FF2518CB8700A3A064 /* TouchableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TouchableView.h; sourceTree = "<group>"; };
 		315A15002518CB8700A3A064 /* TouchableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TouchableView.m; sourceTree = "<group>"; };
@@ -1616,6 +1619,8 @@
 		ADBC39951D07840300327304 /* Doubles */ = {
 			isa = PBXGroup;
 			children = (
+				13FFF2F0287DBEE600E561E4 /* XCElementSnapshotDouble.h */,
+				13FFF2F1287DBEE600E561E4 /* XCElementSnapshotDouble.m */,
 				ADBC39961D07842800327304 /* XCUIElementDouble.h */,
 				ADBC39971D07842800327304 /* XCUIElementDouble.m */,
 				EE6A89271D0B257B0083E92B /* FBApplicationDouble.h */,
@@ -3360,6 +3365,7 @@
 				EE3F8CFE1D08AA17006F02CE /* FBRunLoopSpinnerTests.m in Sources */,
 				714801D11FA9D9FA00DC5997 /* FBSDKVersionTests.m in Sources */,
 				EE3F8D001D08B05F006F02CE /* FBElementTypeTransformerTests.m in Sources */,
+				13FFF2F2287DBEE600E561E4 /* XCElementSnapshotDouble.m in Sources */,
 				EEE16E971D33A25500172525 /* FBConfigurationTests.m in Sources */,
 				ADBC39941D0782CD00327304 /* FBElementCacheTests.m in Sources */,
 				715D554B2229891B00524509 /* FBExceptionHandlerTests.m in Sources */,
