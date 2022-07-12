@@ -23,6 +23,7 @@
 #import "FBXCAXClientProxy.h"
 #import "FBXCodeCompatibility.h"
 #import "FBXCElementSnapshot.h"
+#import "FBXCElementSnapshotWrapper+Helpers.h"
 #import "XCUIApplication.h"
 #import "XCUIApplication+FBQuiescence.h"
 #import "XCUIApplicationImpl.h"
@@ -42,7 +43,7 @@
 
 @implementation XCUIElement (FBUtilities)
 
-- (XCElementSnapshot *)fb_takeSnapshot
+- (id<FBXCElementSnapshot>)fb_takeSnapshot
 {
   NSError *error = nil;
   self.fb_isResolvedFromCache = @(NO);
@@ -62,7 +63,7 @@
   return self.lastSnapshot;
 }
 
-- (XCElementSnapshot *)fb_cachedSnapshot
+- (id<FBXCElementSnapshot>)fb_cachedSnapshot
 {
   return [self.query fb_cachedSnapshot];
 }
@@ -107,11 +108,12 @@
                                                                                              maxDepth:maxDepth
                                                                                                 error:&error];
   if (nil == snapshotWithAttributes) {
+    NSString *description = [FBXCElementSnapshotWrapper ensureWrapped:snapshot].fb_description;
     [FBLogger logFmt:@"Cannot take a snapshot with attribute(s) %@ of '%@' after %.2f seconds",
-     attributeNames, snapshot.fb_description, axTimeout];
+     attributeNames, description, axTimeout];
     [FBLogger logFmt:@"This timeout could be customized via '%@' setting", FB_SETTING_CUSTOM_SNAPSHOT_TIMEOUT];
     [FBLogger logFmt:@"Internal error: %@", error.localizedDescription];
-    [FBLogger logFmt:@"Falling back to the default snapshotting mechanism for the element '%@' (some attribute values, like visibility or accessibility might not be precise though)", snapshot.fb_description];
+    [FBLogger logFmt:@"Falling back to the default snapshotting mechanism for the element '%@' (some attribute values, like visibility or accessibility might not be precise though)", description];
     snapshotWithAttributes = self.lastSnapshot;
   } else {
     self.lastSnapshot = snapshotWithAttributes;
@@ -135,7 +137,7 @@
   NSString *uid = selfUID;
   if (nil == uid) {
     uid = self.fb_isResolvedFromCache.boolValue
-      ? self.lastSnapshot.fb_uid
+      ? [FBXCElementSnapshotWrapper ensureWrapped:self.lastSnapshot].fb_uid
       : self.fb_uid;
   }
   if ([sortedIds containsObject:uid]) {
@@ -222,7 +224,7 @@
   UIInterfaceOrientation orientation = self.application.interfaceOrientation;
   if (orientation == UIInterfaceOrientationLandscapeLeft || orientation == UIInterfaceOrientationLandscapeRight) {
     // Workaround XCTest bug when element frame is returned as in portrait mode even if the screenshot is rotated
-    NSArray<id<FBXCElementSnapshot>> *ancestors = selfSnapshot.fb_ancestors;
+    NSArray<id<FBXCElementSnapshot>> *ancestors = [FBXCElementSnapshotWrapper ensureWrapped:selfSnapshot].fb_ancestors;
     id<FBXCElementSnapshot> parentWindow = nil;
     if (1 == ancestors.count) {
       parentWindow = selfSnapshot;

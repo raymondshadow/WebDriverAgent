@@ -30,10 +30,15 @@ static const NSTimeInterval FBScreenLockTimeout = 5.;
 
 static bool fb_isLocked;
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-load-method"
+
 + (void)load
 {
   [self fb_registerAppforDetectLockState];
 }
+
+#pragma clang diagnostic pop
 
 + (void)fb_registerAppforDetectLockState
 {

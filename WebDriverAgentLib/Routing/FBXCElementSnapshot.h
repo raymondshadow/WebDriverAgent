@@ -72,12 +72,11 @@ NS_ASSUME_NONNULL_BEGIN
 // Available since Xcode 10
 - (id)hitPoint:(NSError **)error;
 
-// Available since Xcode 10.0-beta4 on
-+ (id)axAttributesForElementSnapshotKeyPaths:(id)arg1;
 // Since Xcode 10.2
 + (id)axAttributesForElementSnapshotKeyPaths:(id)arg1 isMacOS:(_Bool)arg2;
 // Since Xcode 10.0
-+ (NSArray<NSString *> *)sanitizedElementSnapshotHierarchyAttributesForAttributes:(NSArray<NSString *> *)arg1 isMacOS:(_Bool)arg2;
++ (NSArray<NSString *> *)sanitizedElementSnapshotHierarchyAttributesForAttributes:(nullable NSArray<NSString *> *)arg1
+                                                                          isMacOS:(_Bool)arg2;
 
 @end
 

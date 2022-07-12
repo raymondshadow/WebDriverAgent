@@ -9,7 +9,6 @@
 
 #import <WebDriverAgentLib/WebDriverAgentLib.h>
 #import "XCPointerEvent.h"
-#import "FBXCElementSnapshotWrapper.h"
 
 /**
  The version of testmanagerd process which is running on the device.
@@ -28,16 +27,6 @@
 NSInteger FBTestmanagerdVersion(void);
 
 NS_ASSUME_NONNULL_BEGIN
-
-/**
- Set of categories that patches method name differences between Xcode versions,
- so that WDA can be build with different Xcode versions.
- */
-@interface FBXCElementSnapshotWrapper (FBCompatibility)
-
-- (nullable SEL)fb_attributesForElementSnapshotKeyPathsSelector;
-
-@end
 
 /**
  The exception happends if one tries to call application method,

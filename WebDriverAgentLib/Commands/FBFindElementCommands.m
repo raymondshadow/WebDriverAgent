@@ -84,11 +84,12 @@ static id<FBResponsePayload> FBNoSuchElementErrorResponseForRequest(FBRouteReque
   XCUIElement *element = [elementCache elementForUUID:(NSString *)request.parameters[@"uuid"]
                        resolveForAdditionalAttributes:@[FB_XCAXAIsVisibleAttributeName]
                                           andMaxDepth:nil];
-  NSArray<XCElementSnapshot *> *visibleCellSnapshots = [element.lastSnapshot descendantsByFilteringWithBlock:^BOOL(XCElementSnapshot *snapshot) {
-    return snapshot.elementType == XCUIElementTypeCell && snapshot.wdVisible;
+  NSArray<id<FBXCElementSnapshot>> *visibleCellSnapshots = [element.lastSnapshot descendantsByFilteringWithBlock:^BOOL(id<FBXCElementSnapshot> snapshot) {
+    return snapshot.elementType == XCUIElementTypeCell
+      && [FBXCElementSnapshotWrapper ensureWrapped:snapshot].wdVisible;
   }];
   NSArray *cells = [element fb_filterDescendantsWithSnapshots:visibleCellSnapshots
-                                                      selfUID:element.lastSnapshot.wdUID
+                                                      selfUID:[FBXCElementSnapshotWrapper ensureWrapped:element.lastSnapshot].wdUID
                                                  onlyChildren:NO];
   return FBResponseWithCachedElements(cells, request.session.elementCache, FBConfiguration.shouldUseCompactResponses);
 }

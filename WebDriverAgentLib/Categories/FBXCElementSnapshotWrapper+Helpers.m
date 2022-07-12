@@ -79,9 +79,12 @@ inline static BOOL isNilOrEmpty(id value);
 - (BOOL)fb_framelessFuzzyMatchesElement:(id<FBXCElementSnapshot>)snapshot
 {
     // Pure payload-based comparison sometimes yield false negatives, therefore relying on it only if all of the identifying properties are blank
-  if (isNilOrEmpty(self.identifier) && isNilOrEmpty(self.title) && isNilOrEmpty(self.label) &&
-      isNilOrEmpty(self.value) && isNilOrEmpty(self.placeholderValue)) {
-    return [self.wdUID isEqualToString:(snapshot.wdUID ?: @"")];
+  if (isNilOrEmpty(self.identifier)
+      && isNilOrEmpty(self.title)
+      && isNilOrEmpty(self.label)
+      && isNilOrEmpty(self.value)
+      && isNilOrEmpty(self.placeholderValue)) {
+    return [self.wdUID isEqualToString:([FBXCElementSnapshotWrapper ensureWrapped:snapshot].wdUID ?: @"")];
   }
   
   // Sometimes value and placeholderValue of a correct match from different snapshots are not the same (one is nil and one is a blank string)
@@ -96,7 +99,7 @@ inline static BOOL isNilOrEmpty(id value);
 
 - (NSArray<id<FBXCElementSnapshot>> *)fb_descendantsCellSnapshots
 {
-  NSArray<XCElementSnapshot *> *cellSnapshots = [self fb_descendantsMatchingType:XCUIElementTypeCell];
+  NSArray<id<FBXCElementSnapshot>> *cellSnapshots = [self fb_descendantsMatchingType:XCUIElementTypeCell];
     
   if (cellSnapshots.count == 0) {
       // For the home screen, cells are actually of type XCUIElementTypeIcon
@@ -113,8 +116,8 @@ inline static BOOL isNilOrEmpty(id value);
 
 - (NSArray<id<FBXCElementSnapshot>> *)fb_ancestors
 {
-  NSMutableArray<XCElementSnapshot *> *ancestors = [NSMutableArray array];
-  XCElementSnapshot *parent = self.parent;
+  NSMutableArray<id<FBXCElementSnapshot>> *ancestors = [NSMutableArray array];
+  id<FBXCElementSnapshot> parent = self.parent;
   while (parent) {
     [ancestors addObject:parent];
     parent = parent.parent;
@@ -124,7 +127,7 @@ inline static BOOL isNilOrEmpty(id value);
 
 - (id<FBXCElementSnapshot>)fb_parentCellSnapshot
 {
-    XCElementSnapshot *targetCellSnapshot = self;
+    id<FBXCElementSnapshot> targetCellSnapshot = self;
     // XCUIElementTypeIcon is the cell type for homescreen icons
     NSArray<NSNumber *> *acceptableElementTypes = @[
                                                     @(XCUIElementTypeCell),

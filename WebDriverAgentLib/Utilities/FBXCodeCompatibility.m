@@ -19,30 +19,6 @@
 
 static const NSTimeInterval APP_STATE_CHANGE_TIMEOUT = 5.0;
 
-@implementation FBXCElementSnapshotWrapper (FBCompatibility)
-
-- (id)fb_axAttributesForElementSnapshotKeyPathsIOS:(id)arg1
-{
-  return [self.snapshot.class axAttributesForElementSnapshotKeyPaths:arg1 isMacOS:NO];
-}
-
-- (nullable SEL)fb_attributesForElementSnapshotKeyPathsSelector
-{
-  static SEL attributesForElementSnapshotKeyPathsSelector = nil;
-  static dispatch_once_t attributesForElementSnapshotKeyPathsSelectorToken;
-  dispatch_once(&attributesForElementSnapshotKeyPathsSelectorToken, ^{
-    if ([self.snapshot.class respondsToSelector:@selector(axAttributesForElementSnapshotKeyPaths:)]) {
-      attributesForElementSnapshotKeyPathsSelector = @selector(axAttributesForElementSnapshotKeyPaths:);
-    } else if ([self.snapshot.class respondsToSelector:@selector(axAttributesForElementSnapshotKeyPaths:isMacOS:)]) {
-      attributesForElementSnapshotKeyPathsSelector = @selector(fb_axAttributesForElementSnapshotKeyPathsIOS:);
-    }
-  });
-  return attributesForElementSnapshotKeyPathsSelector;
-}
-
-@end
-
-
 NSString *const FBApplicationMethodNotSupportedException = @"FBApplicationMethodNotSupportedException";
 
 @implementation XCUIApplication (FBCompatibility)

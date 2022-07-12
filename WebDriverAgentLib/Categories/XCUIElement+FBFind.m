@@ -14,8 +14,7 @@
 #import "FBElementTypeTransformer.h"
 #import "FBPredicate.h"
 #import "NSPredicate+FBFormat.h"
-#import "XCElementSnapshot.h"
-#import "XCElementSnapshot+FBHelpers.h"
+#import "FBXCElementSnapshotWrapper+Helpers.h"
 #import "FBXCodeCompatibility.h"
 #import "XCUIElement+FBCaching.h"
 #import "XCUIElement+FBUtilities.h"
@@ -37,7 +36,7 @@
   return matchedElement ? @[matchedElement] : @[];
 }
 
-- (XCElementSnapshot *)fb_cachedSnapshotWithQuery:(XCUIElementQuery *)query
+- (id<FBXCElementSnapshot>)fb_cachedSnapshotWithQuery:(XCUIElementQuery *)query
 {
   return [self isKindOfClass:XCUIApplication.class] ? query.rootElementSnapshot : self.fb_cachedSnapshot;
 }
@@ -51,7 +50,7 @@
   XCUIElementQuery *query = [self.fb_query descendantsMatchingType:type];
   NSMutableArray *result = [NSMutableArray array];
   [result addObjectsFromArray:[self.class fb_extractMatchingElementsFromQuery:query shouldReturnAfterFirstMatch:shouldReturnAfterFirstMatch]];
-  XCElementSnapshot *cachedSnapshot = [self fb_cachedSnapshotWithQuery:query];
+  id<FBXCElementSnapshot> cachedSnapshot = [self fb_cachedSnapshotWithQuery:query];
   if (type == XCUIElementTypeAny || cachedSnapshot.elementType == type) {
     if (shouldReturnAfterFirstMatch || result.count == 0) {
       return @[self];
@@ -110,7 +109,7 @@
   NSMutableArray<XCUIElement *> *result = [NSMutableArray array];
   [result addObjectsFromArray:[self.class fb_extractMatchingElementsFromQuery:query
                                                   shouldReturnAfterFirstMatch:shouldReturnAfterFirstMatch]];
-  XCElementSnapshot *cachedSnapshot = [self fb_cachedSnapshotWithQuery:query];
+  id<FBXCElementSnapshot> cachedSnapshot = [self fb_cachedSnapshotWithQuery:query];
   // Include self element into predicate search
   if ([formattedPredicate evaluateWithObject:cachedSnapshot]) {
     if (shouldReturnAfterFirstMatch || result.count == 0) {
@@ -129,16 +128,16 @@
 {
   // XPath will try to match elements only class name, so requesting elements by XCUIElementTypeAny will not work. We should use '*' instead.
   xpathQuery = [xpathQuery stringByReplacingOccurrencesOfString:@"XCUIElementTypeAny" withString:@"*"];
-  NSArray<XCElementSnapshot *> *matchingSnapshots = [FBXPath matchesWithRootElement:self forQuery:xpathQuery];
+  NSArray<id<FBXCElementSnapshot>> *matchingSnapshots = [FBXPath matchesWithRootElement:self forQuery:xpathQuery];
   if (0 == [matchingSnapshots count]) {
     return @[];
   }
   if (shouldReturnAfterFirstMatch) {
-    XCElementSnapshot *snapshot = matchingSnapshots.firstObject;
+    id<FBXCElementSnapshot> snapshot = matchingSnapshots.firstObject;
     matchingSnapshots = @[snapshot];
   }
   return [self fb_filterDescendantsWithSnapshots:matchingSnapshots
-                                         selfUID:self.lastSnapshot.wdUID
+                                         selfUID:[FBXCElementSnapshotWrapper ensureWrapped:self.lastSnapshot].wdUID
                                     onlyChildren:NO];
 }
 

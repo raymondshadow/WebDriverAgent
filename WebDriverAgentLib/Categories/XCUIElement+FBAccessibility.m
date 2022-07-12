@@ -12,6 +12,7 @@
 #import "FBConfiguration.h"
 #import "XCTestPrivateSymbols.h"
 #import "XCUIElement+FBUtilities.h"
+#import "FBXCElementSnapshotWrapper+Helpers.h"
 
 @implementation XCUIElement (FBAccessibility)
 

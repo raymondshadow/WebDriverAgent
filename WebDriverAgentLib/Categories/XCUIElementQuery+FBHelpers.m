@@ -15,7 +15,7 @@
 
 @implementation XCUIElementQuery (FBHelpers)
 
-- (nullable XCElementSnapshot *)fb_cachedSnapshot
+- (nullable id<FBXCElementSnapshot>)fb_cachedSnapshot
 {
   id<FBXCElementSnapshot> rootElementSnapshot = self.rootElementSnapshot;
   if (nil == rootElementSnapshot) {

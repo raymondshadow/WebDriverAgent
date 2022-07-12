@@ -16,8 +16,7 @@
 #import "FBSession.h"
 #import "FBXCAccessibilityElement.h"
 #import "FBXCodeCompatibility.h"
-#import "XCElementSnapshot+FBHelpers.h"
-#import "XCElementSnapshot+FBHitPoint.h"
+#import "FBXCElementSnapshotWrapper+Helpers.h"
 #import "XCUIElement+FBUtilities.h"
 #import "XCUIElement+FBUID.h"
 #import "XCTestPrivateSymbols.h"
@@ -58,7 +57,7 @@
 }
 
 - (BOOL)fb_cacheVisibilityWithValue:(BOOL)isVisible
-                       forAncestors:(nullable NSArray<XCElementSnapshot *> *)ancestors
+                       forAncestors:(nullable NSArray<id<FBXCElementSnapshot>> *)ancestors
 {
   NSMutableDictionary *cache = FBSession.activeSession.elementsVisibilityCache;
   if (nil == cache) {
@@ -73,8 +72,8 @@
   [destination setObject:visibleObj forKey:self.fb_uniqId];
   if (isVisible && nil != ancestors) {
     // if an element is visible then all its ancestors must be visible as well
-    for (XCElementSnapshot *ancestor in ancestors) {
-      NSString *ancestorId = ancestor.fb_uniqId;
+    for (id<FBXCElementSnapshot> ancestor in ancestors) {
+      NSString *ancestorId = [FBXCElementSnapshotWrapper ensureWrapped:ancestor].fb_uniqId;
       if (nil == [destination objectForKey:ancestorId]) {
         [destination setObject:visibleObj forKey:ancestorId];
       }
@@ -83,17 +82,17 @@
   return isVisible;
 }
 
-- (CGRect)fb_frameInContainer:(XCElementSnapshot *)container
+- (CGRect)fb_frameInContainer:(id<FBXCElementSnapshot>)container
         hierarchyIntersection:(nullable NSValue *)intersectionRectange
 {
   CGRect currentRectangle = nil == intersectionRectange ? self.frame : [intersectionRectange CGRectValue];
-  XCElementSnapshot *parent = self.parent;
+  id<FBXCElementSnapshot> parent = self.parent;
   CGRect parentFrame = parent.frame;
   CGRect containerFrame = container.frame;
   if (CGSizeEqualToSize(parentFrame.size, CGSizeZero) &&
       CGPointEqualToPoint(parentFrame.origin, CGPointZero)) {
     // Special case (or XCTest bug). Shift the origin and return immediately after shift
-    XCElementSnapshot *nextParent = parent.parent;
+    id<FBXCElementSnapshot> nextParent = parent.parent;
     BOOL isGrandparent = YES;
     while (nextParent && nextParent != container) {
       CGRect nextParentFrame = nextParent.frame;
@@ -134,18 +133,19 @@
   if (CGRectIsEmpty(intersectionWithParent) || parent == container) {
     return intersectionWithParent;
   }
-  return [parent fb_frameInContainer:container hierarchyIntersection:[NSValue valueWithCGRect:intersectionWithParent]];
+  return [[FBXCElementSnapshotWrapper ensureWrapped:parent] fb_frameInContainer:container
+                                                          hierarchyIntersection:[NSValue valueWithCGRect:intersectionWithParent]];
 }
 
 - (BOOL)fb_hasAnyVisibleLeafs
 {
-  NSArray<XCElementSnapshot *> *children = self.children;
+  NSArray<id<FBXCElementSnapshot>> *children = self.children;
   if (0 == children.count) {
     return self.fb_isVisible;
   }
 
-  for (XCElementSnapshot *child in children) {
-    if (child.fb_hasAnyVisibleLeafs) {
+  for (id<FBXCElementSnapshot> child in children) {
+    if ([FBXCElementSnapshotWrapper ensureWrapped:child].fb_hasAnyVisibleLeafs) {
       return YES;
     }
   }
@@ -170,13 +170,13 @@
     return [self fb_cacheVisibilityWithValue:NO forAncestors:nil];
   }
 
-  NSArray<XCElementSnapshot *> *ancestors = self.fb_ancestors;
+  NSArray<id<FBXCElementSnapshot>> *ancestors = self.fb_ancestors;
   if ([FBConfiguration shouldUseTestManagerForVisibilityDetection]) {
     BOOL visibleAttrValue = [(NSNumber *)[self fb_attributeValue:FB_XCAXAIsVisibleAttributeName] boolValue];
     return [self fb_cacheVisibilityWithValue:visibleAttrValue forAncestors:ancestors];
   }
 
-  XCElementSnapshot *parentWindow = ancestors.count > 1 ? [ancestors objectAtIndex:ancestors.count - 2] : nil;
+  id<FBXCElementSnapshot> parentWindow = ancestors.count > 1 ? [ancestors objectAtIndex:ancestors.count - 2] : nil;
   CGRect visibleRect = selfFrame;
   if (nil != parentWindow) {
     visibleRect = [self fb_frameInContainer:parentWindow hierarchyIntersection:nil];
@@ -187,7 +187,7 @@
   CGPoint midPoint = CGPointMake(visibleRect.origin.x + visibleRect.size.width / 2,
                                  visibleRect.origin.y + visibleRect.size.height / 2);
 #if !TARGET_OS_TV // TV has no orientation, so it does not need to coordinate
-  XCElementSnapshot *appElement = ancestors.count > 0 ? [ancestors lastObject] : self;
+  id<FBXCElementSnapshot> appElement = ancestors.count > 0 ? [ancestors lastObject] : self;
   CGRect appFrame = appElement.frame;
   CGRect windowFrame = nil == parentWindow ? selfFrame : parentWindow.frame;
   if ((appFrame.size.height > appFrame.size.width && windowFrame.size.height < windowFrame.size.width) ||
@@ -203,7 +203,7 @@
     if (FBIsAXElementEqualToOther(self.accessibilityElement, hitElement)) {
       return [self fb_cacheVisibilityWithValue:YES forAncestors:ancestors];
     }
-    for (XCElementSnapshot *ancestor in ancestors) {
+    for (id<FBXCElementSnapshot> ancestor in ancestors) {
       if (FBIsAXElementEqualToOther(hitElement, ancestor.accessibilityElement)) {
         return [self fb_cacheVisibilityWithValue:YES forAncestors:ancestors];
       }
@@ -211,9 +211,10 @@
   }
   if (self.children.count > 0) {
     if (nil != hitElement) {
-      for (XCElementSnapshot *descendant in self._allDescendants) {
+      for (id<FBXCElementSnapshot> descendant in self._allDescendants) {
         if (FBIsAXElementEqualToOther(hitElement, descendant.accessibilityElement)) {
-          return [self fb_cacheVisibilityWithValue:YES forAncestors:descendant.fb_ancestors];
+          return [self fb_cacheVisibilityWithValue:YES
+                                      forAncestors:[FBXCElementSnapshotWrapper ensureWrapped:descendant].fb_ancestors];
         }
       }
     }

@@ -8,6 +8,7 @@
  */
 
 #import <WebDriverAgentLib/FBXPath.h>
+#import "FBXCElementSnapshot.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
  If `query` argument is assigned then `excludedAttributes` argument is effectively ignored.
  @return zero if the method has completed successfully
  */
-+ (int)xmlRepresentationWithRootElement:(XCElementSnapshot *)root
++ (int)xmlRepresentationWithRootElement:(id<FBXCElementSnapshot>)root
                                  writer:(xmlTextWriterPtr)writer
                            elementStore:(nullable NSMutableDictionary *)elementStore
                                   query:(nullable NSString*)query

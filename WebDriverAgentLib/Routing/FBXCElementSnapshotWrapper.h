@@ -12,12 +12,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBXCElementSnapshotWrapper : NSObject<FBXCElementSnapshot, FBElement>
+@interface FBXCElementSnapshotWrapper : NSObject<FBXCElementSnapshot>
 
 @property (nonatomic, readonly) id<FBXCElementSnapshot> snapshot;
 
 - (instancetype)initWithSnapshot:(id<FBXCElementSnapshot>)snapshot;
-+ (instancetype)ensureWrapped:(nullable id<FBXCElementSnapshot>)snapshot;
++ (nullable instancetype)ensureWrapped:(nullable id<FBXCElementSnapshot>)snapshot;
 
 @end
 

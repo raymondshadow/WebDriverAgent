@@ -33,6 +33,9 @@ static id FBAXClient = nil;
   return FBConfiguration.snapshotRequestParameters;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-load-method"
+
 + (void)load
 {
   static dispatch_once_t onceToken;
@@ -42,6 +45,8 @@ static id FBAXClient = nil;
     FBReplaceMethod([self class], originalParametersSelector, swizzledParametersSelector);
   });
 }
+
+#pragma clang diagnostic pop
 
 @end
 

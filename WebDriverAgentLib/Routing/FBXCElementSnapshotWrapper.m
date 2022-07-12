@@ -11,6 +11,10 @@
 
 #import <objc/runtime.h>
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-protocol-property-synthesis"
+#pragma clang diagnostic ignored "-Wprotocol"
+
 @implementation FBXCElementSnapshotWrapper
 
 - (instancetype)initWithSnapshot:(id<FBXCElementSnapshot>)snapshot;
@@ -38,3 +42,5 @@
 }
 
 @end
+
+#pragma clang diagnostic pop

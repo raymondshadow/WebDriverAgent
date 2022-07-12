@@ -30,7 +30,7 @@
   xmlChar *xmlbuff;
   int rc = xmlTextWriterStartDocument(writer, NULL, "UTF-8", NULL);
   if (rc >= 0) {
-    rc = [FBXPath xmlRepresentationWithRootElement:(XCElementSnapshot *)element
+    rc = [FBXPath xmlRepresentationWithRootElement:(id<FBXCElementSnapshot>)element
                                                 writer:writer
                                           elementStore:elementStore
                                                  query:query
@@ -108,7 +108,7 @@
   NSString *query = [NSString stringWithFormat:@"//%@", root.wdType];
   int rc = xmlTextWriterStartDocument(writer, NULL, "UTF-8", NULL);
   if (rc >= 0) {
-    rc = [FBXPath xmlRepresentationWithRootElement:(XCElementSnapshot *)root
+    rc = [FBXPath xmlRepresentationWithRootElement:(id<FBXCElementSnapshot>)root
                                             writer:writer
                                       elementStore:elementStore
                                              query:query
