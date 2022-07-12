@@ -62,7 +62,7 @@
   SEL webDriverAttributesSelector = descr.name;
   return nil == webDriverAttributesSelector
     ? nil
-    : [self fb_snapshotForAttributeName:NSStringFromSelector(webDriverAttributesSelector)];
+    : [FBXCElementSnapshotWrapper ensureWrapped:[self fb_snapshotForAttributeName:NSStringFromSelector(webDriverAttributesSelector)]];
 }
 
 @end

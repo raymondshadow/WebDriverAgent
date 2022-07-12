@@ -20,7 +20,8 @@
 #import "XCUIElement+FBWebDriverAttributes.h"
 #import "XCUIHitPointResult.h"
 
-inline static BOOL isSnapshotTypeAmongstGivenTypes(id<FBXCElementSnapshot> snapshot, NSArray<NSNumber *> *types);
+inline static BOOL isSnapshotTypeAmongstGivenTypes(id<FBXCElementSnapshot> snapshot,
+                                                   NSArray<NSNumber *> *types);
 
 @implementation FBXCElementSnapshotWrapper (Helpers)
 
@@ -100,18 +101,18 @@ inline static BOOL isNilOrEmpty(id value);
 - (NSArray<id<FBXCElementSnapshot>> *)fb_descendantsCellSnapshots
 {
   NSArray<id<FBXCElementSnapshot>> *cellSnapshots = [self fb_descendantsMatchingType:XCUIElementTypeCell];
-    
+  
   if (cellSnapshots.count == 0) {
-      // For the home screen, cells are actually of type XCUIElementTypeIcon
-      cellSnapshots = [self fb_descendantsMatchingType:XCUIElementTypeIcon];
-  }
-   
-  if (cellSnapshots.count == 0) {
-      // In some cases XCTest will not report Cell Views. In that case grab all descendants and try to figure out scroll directon from them.
-      cellSnapshots = self._allDescendants;
+    // For the home screen, cells are actually of type XCUIElementTypeIcon
+    cellSnapshots = [self fb_descendantsMatchingType:XCUIElementTypeIcon];
   }
   
-    return cellSnapshots;
+  if (cellSnapshots.count == 0) {
+    // In some cases XCTest will not report Cell Views. In that case grab all descendants and try to figure out scroll directon from them.
+    cellSnapshots = self._allDescendants;
+  }
+  
+  return cellSnapshots;
 }
 
 - (NSArray<id<FBXCElementSnapshot>> *)fb_ancestors
@@ -127,16 +128,16 @@ inline static BOOL isNilOrEmpty(id value);
 
 - (id<FBXCElementSnapshot>)fb_parentCellSnapshot
 {
-    id<FBXCElementSnapshot> targetCellSnapshot = self;
-    // XCUIElementTypeIcon is the cell type for homescreen icons
-    NSArray<NSNumber *> *acceptableElementTypes = @[
-                                                    @(XCUIElementTypeCell),
-                                                    @(XCUIElementTypeIcon),
-                                                    ];
-    if (self.elementType != XCUIElementTypeCell && self.elementType != XCUIElementTypeIcon) {
-        targetCellSnapshot = [self fb_parentMatchingOneOfTypes:acceptableElementTypes];
-    }
-    return targetCellSnapshot;
+  id<FBXCElementSnapshot> targetCellSnapshot = self;
+  // XCUIElementTypeIcon is the cell type for homescreen icons
+  NSArray<NSNumber *> *acceptableElementTypes = @[
+                                                  @(XCUIElementTypeCell),
+                                                  @(XCUIElementTypeIcon),
+                                                  ];
+  if (self.elementType != XCUIElementTypeCell && self.elementType != XCUIElementTypeIcon) {
+      targetCellSnapshot = [self fb_parentMatchingOneOfTypes:acceptableElementTypes];
+  }
+  return targetCellSnapshot;
 }
 
 - (CGRect)fb_visibleFrameWithFallback
