@@ -212,7 +212,7 @@
 {
   if (nil != self.parent) {
     for (NSUInteger index = 0; index < self.parent.children.count; ++index) {
-      if ([self.parent.children objectAtIndex:index] == self) {
+      if ([self.parent.children objectAtIndex:index] == self.snapshot) {
         return index;
       }
     }
