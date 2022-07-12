@@ -124,7 +124,8 @@ const CGFloat FBScrollTouchProportion = 0.75f;
     ];
   });
 
-  __block NSArray<id<FBXCElementSnapshot>> *cellSnapshots, *visibleCellSnapshots;
+  __block NSArray<id<FBXCElementSnapshot>> *cellSnapshots;
+  __block NSMutableArray<id<FBXCElementSnapshot>> *visibleCellSnapshots = [NSMutableArray new];
   id<FBXCElementSnapshot> scrollView = [prescrollSnapshot fb_parentMatchingOneOfTypes:acceptedParents
       filter:^(id<FBXCElementSnapshot> snapshot) {
     FBXCElementSnapshotWrapper *wrappedSnapshot = [FBXCElementSnapshotWrapper ensureWrapped:snapshot];
@@ -134,8 +135,13 @@ const CGFloat FBScrollTouchProportion = 0.75f;
     }
 
     cellSnapshots = [wrappedSnapshot fb_descendantsCellSnapshots];
-
-    visibleCellSnapshots = [cellSnapshots filteredArrayUsingPredicate:[FBPredicate predicateWithFormat:@"%K == YES", FBStringify(XCUIElement, fb_isVisible)]];
+    
+    for (id<FBXCElementSnapshot> cellSnapshot in cellSnapshots) {
+      FBXCElementSnapshotWrapper *wrappedCellSnapshot = [FBXCElementSnapshotWrapper ensureWrapped:cellSnapshot];
+      if (wrappedCellSnapshot.wdVisible) {
+        [visibleCellSnapshots addObject:cellSnapshot];
+      }
+    }
 
     if (visibleCellSnapshots.count > 1) {
       return YES;
@@ -155,7 +161,8 @@ const CGFloat FBScrollTouchProportion = 0.75f;
   // Can't just do indexOfObject, because targetCellSnapshot may represent the same object represented by a member of cellSnapshots, yet be a different object
   // than that member. This reflects the fact that targetCellSnapshot came out of self.fb_parentCellSnapshot, not out of cellSnapshots directly.
   // If the result is NSNotFound, we'll just proceed by scrolling downward/rightward, since NSNotFound will always be larger than the current index.
-  NSUInteger targetCellIndex = [cellSnapshots indexOfObjectPassingTest:^BOOL(id<FBXCElementSnapshot> _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+  NSUInteger targetCellIndex = [cellSnapshots indexOfObjectPassingTest:^BOOL(id<FBXCElementSnapshot> _Nonnull obj,
+                                                                             NSUInteger idx, BOOL *_Nonnull stop) {
     return [obj _matchesElement:targetCellSnapshot];
   }];
   NSUInteger visibleCellIndex = [cellSnapshots indexOfObject:lastSnapshot];
@@ -181,13 +188,17 @@ const CGFloat FBScrollTouchProportion = 0.75f;
   while (![self fb_isEquivalentElementSnapshotVisible:prescrollSnapshot] && scrollCount < maxScrollCount) {
     if (targetCellIndex < visibleCellIndex) {
       scrollDirection == FBXCUIElementScrollDirectionVertical ?
-        [scrollViewWrapped fb_scrollUpByNormalizedDistance:normalizedScrollDistance inApplication:self.application] :
-        [scrollViewWrapped fb_scrollLeftByNormalizedDistance:normalizedScrollDistance inApplication:self.application];
+        [scrollViewWrapped fb_scrollUpByNormalizedDistance:normalizedScrollDistance
+                                             inApplication:self.application] :
+        [scrollViewWrapped fb_scrollLeftByNormalizedDistance:normalizedScrollDistance
+                                               inApplication:self.application];
     }
     else {
       scrollDirection == FBXCUIElementScrollDirectionVertical ?
-        [scrollViewWrapped fb_scrollDownByNormalizedDistance:normalizedScrollDistance inApplication:self.application] :
-        [scrollViewWrapped fb_scrollRightByNormalizedDistance:normalizedScrollDistance inApplication:self.application];
+        [scrollViewWrapped fb_scrollDownByNormalizedDistance:normalizedScrollDistance
+                                               inApplication:self.application] :
+        [scrollViewWrapped fb_scrollRightByNormalizedDistance:normalizedScrollDistance
+                                                inApplication:self.application];
     }
     scrollCount++;
     // Wait for scroll animation
@@ -211,10 +222,9 @@ const CGFloat FBScrollTouchProportion = 0.75f;
   CGVector scrollVector = CGVectorMake(visibleFrame.size.width - targetCellSnapshot.frame.size.width,
                                        visibleFrame.size.height - targetCellSnapshot.frame.size.height
                                        );
-  if (![scrollViewWrapped fb_scrollByVector:scrollVector inApplication:self.application error:error]) {
-    return NO;
-  }
-  return YES;
+  return [scrollViewWrapped fb_scrollByVector:scrollVector
+                                inApplication:self.application
+                                        error:error];
 }
 
 - (BOOL)fb_isEquivalentElementSnapshotVisible:(id<FBXCElementSnapshot>)snapshot

@@ -132,7 +132,10 @@
   if (0 == snapshots.count) {
     return @[];
   }
-  NSArray<NSString *> *sortedIds = [snapshots valueForKey:FBStringify(XCUIElement, wdUID)];
+  NSMutableArray<NSString *> *sortedIds = [NSMutableArray new];
+  for (id<FBXCElementSnapshot> snapshot in snapshots) {
+    [sortedIds addObject:(NSString *)[FBXCElementSnapshotWrapper ensureWrapped:snapshot].fb_uid];
+  }
   NSMutableArray<XCUIElement *> *matchedElements = [NSMutableArray array];
   NSString *uid = selfUID;
   if (nil == uid) {
@@ -154,7 +157,10 @@
   XCUIElementQuery *query = onlyChildren
     ? [self.fb_query childrenMatchingType:type]
     : [self.fb_query descendantsMatchingType:type];
-  query = [query matchingPredicate:[NSPredicate predicateWithFormat:@"%K IN %@", FBStringify(XCUIElement, wdUID), sortedIds]];
+  NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id<FBXCElementSnapshot> snapshot, NSDictionary *bindings) {
+    return [sortedIds containsObject:(NSString *)[FBXCElementSnapshotWrapper ensureWrapped:snapshot].fb_uid];
+  }];
+  query = [query matchingPredicate:predicate];
   if (1 == snapshots.count) {
     XCUIElement *result = query.fb_firstMatch;
     result.fb_isResolvedNatively = @NO;

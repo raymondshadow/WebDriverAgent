@@ -13,16 +13,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface XCUIElement (FBUID)
 
-/*! Represents unique internal element identifier, which is the same for an element and its snapshot */
+/*! Represents unique internal element identifier, which is the same for an element and its snapshot as UUIDv4 */
 @property (nonatomic, nullable, readonly, copy) NSString *fb_uid;
+
+/*! Represents unique internal element identifier, which is the same for an element and its snapshot */
+@property (nonatomic, readonly) unsigned long long fb_accessibiltyId;
 
 @end
 
 
 @interface FBXCElementSnapshotWrapper (FBUID)
 
-/*! Represents unique internal element identifier, which is the same for an element and its snapshot */
+/*! Represents unique internal element identifier, which is the same for an element and its snapshot as UUIDv4 */
 @property (nonatomic, nullable, readonly, copy) NSString *fb_uid;
+
+/*! Represents unique internal element identifier, which is the same for an element and its snapshot */
+@property (nonatomic, readonly) unsigned long long fb_accessibiltyId;
 
 @end
 
