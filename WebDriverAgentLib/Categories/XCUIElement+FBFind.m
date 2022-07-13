@@ -12,7 +12,6 @@
 
 #import "FBMacros.h"
 #import "FBElementTypeTransformer.h"
-#import "FBPredicate.h"
 #import "NSPredicate+FBFormat.h"
 #import "FBXCElementSnapshotWrapper+Helpers.h"
 #import "FBXCodeCompatibility.h"
@@ -72,7 +71,9 @@
   return elements;
 }
 
-- (void)descendantsWithProperty:(NSString *)property value:(NSString *)value partial:(BOOL)partialSearch results:(NSMutableArray<XCUIElement *> *)results
+- (void)descendantsWithProperty:(NSString *)property value:(NSString *)value
+                        partial:(BOOL)partialSearch
+                        results:(NSMutableArray<XCUIElement *> *)results
 {
   if (partialSearch) {
     NSString *text = [self fb_valueForWDAttributeName:property];
@@ -87,12 +88,12 @@
   }
 
   property = [FBElementUtils wdAttributeNameForAttributeName:property];
-  value = [value stringByReplacingOccurrencesOfString:@"'" withString:@"\\'"];
-  NSString *operation = partialSearch ?
-  [NSString stringWithFormat:@"%@ like '*%@*'", property, value] :
-  [NSString stringWithFormat:@"%@ == '%@'", property, value];
-
-  NSPredicate *predicate = [FBPredicate predicateWithFormat:operation];
+  NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id<FBXCElementSnapshot> snapshot,
+                                                                 NSDictionary<NSString *,id> * _Nullable bindings) {
+    FBXCElementSnapshotWrapper *wrappedSnapshot = [FBXCElementSnapshotWrapper ensureWrapped:snapshot];
+    NSString *propertyValue = [NSString stringWithFormat:@"%@", [wrappedSnapshot fb_valueForWDAttributeName:property]];
+    return partialSearch ? [value containsString:propertyValue] : [value isEqualToString:propertyValue];
+  }];
   XCUIElementQuery *query = [[self.fb_query descendantsMatchingType:XCUIElementTypeAny] matchingPredicate:predicate];
   NSArray *childElements = query.fb_allMatches;
   [results addObjectsFromArray:childElements];
@@ -104,7 +105,7 @@
 - (NSArray<XCUIElement *> *)fb_descendantsMatchingPredicate:(NSPredicate *)predicate
                                 shouldReturnAfterFirstMatch:(BOOL)shouldReturnAfterFirstMatch
 {
-  NSPredicate *formattedPredicate = [NSPredicate fb_formatSearchPredicate:predicate];
+  NSPredicate *formattedPredicate = [NSPredicate fb_snapshotBlockPredicateWithPredicate:predicate];
   XCUIElementQuery *query = [[self.fb_query descendantsMatchingType:XCUIElementTypeAny] matchingPredicate:formattedPredicate];
   NSMutableArray<XCUIElement *> *result = [NSMutableArray array];
   [result addObjectsFromArray:[self.class fb_extractMatchingElementsFromQuery:query
@@ -147,7 +148,11 @@
 - (NSArray<XCUIElement *> *)fb_descendantsMatchingIdentifier:(NSString *)accessibilityId
                                  shouldReturnAfterFirstMatch:(BOOL)shouldReturnAfterFirstMatch
 {
-  NSPredicate *predicate = [FBPredicate predicateWithFormat:@"name == %@", accessibilityId];
+  NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id<FBXCElementSnapshot> snapshot,
+                                                                 NSDictionary<NSString *,id> * _Nullable bindings) {
+    FBXCElementSnapshotWrapper *wrappedSnapshot = [FBXCElementSnapshotWrapper ensureWrapped:snapshot];
+    return [wrappedSnapshot.wdName isEqualToString:accessibilityId];
+  }];
   return [self fb_descendantsMatchingPredicate:predicate
                    shouldReturnAfterFirstMatch:shouldReturnAfterFirstMatch];
 }

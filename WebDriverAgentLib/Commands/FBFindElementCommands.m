@@ -15,7 +15,6 @@
 #import "FBElementCache.h"
 #import "FBExceptions.h"
 #import "FBMacros.h"
-#import "FBPredicate.h"
 #import "FBRouteRequest.h"
 #import "FBSession.h"
 #import "XCTestPrivateSymbols.h"
@@ -170,8 +169,7 @@ shouldReturnAfterFirstMatch:(BOOL)shouldReturnAfterFirstMatch
     return [element fb_descendantsMatchingXPathQuery:value
                          shouldReturnAfterFirstMatch:shouldReturnAfterFirstMatch];
   } else if ([usingText isEqualToString:@"predicate string"]) {
-    NSPredicate *predicate = [FBPredicate predicateWithFormat:value];
-    return [element fb_descendantsMatchingPredicate:predicate
+    return [element fb_descendantsMatchingPredicate:[NSPredicate predicateWithFormat:value]
                         shouldReturnAfterFirstMatch:shouldReturnAfterFirstMatch];
   } else if ([usingText isEqualToString:@"name"]
              || [usingText isEqualToString:@"id"]
