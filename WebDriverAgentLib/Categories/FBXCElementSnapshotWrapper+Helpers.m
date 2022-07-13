@@ -128,7 +128,7 @@ inline static BOOL isNilOrEmpty(id value);
 
 - (id<FBXCElementSnapshot>)fb_parentCellSnapshot
 {
-  id<FBXCElementSnapshot> targetCellSnapshot = self;
+  id<FBXCElementSnapshot> targetCellSnapshot = self.snapshot;
   // XCUIElementTypeIcon is the cell type for homescreen icons
   NSArray<NSNumber *> *acceptableElementTypes = @[
                                                   @(XCUIElementTypeCell),

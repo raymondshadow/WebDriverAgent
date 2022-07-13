@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
  @throws NSException if there is an unexpected internal error during xml parsing
  */
 + (NSArray<id<FBXCElementSnapshot>> *)matchesWithRootElement:(id<FBElement>)root
-                                                forQuery:(NSString *)xpathQuery;
+                                                    forQuery:(NSString *)xpathQuery;
 
 /**
  Gets XML representation of XCElementSnapshot with all its descendants. This method generates the same

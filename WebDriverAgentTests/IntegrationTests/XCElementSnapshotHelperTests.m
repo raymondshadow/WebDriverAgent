@@ -137,11 +137,10 @@
                                @(XCUIElementTypeTable),
                                ];
   id<FBXCElementSnapshot> scrollView = [[FBXCElementSnapshotWrapper ensureWrapped:threeStaticText.fb_takeSnapshot]
-                                   fb_parentMatchingOneOfTypes:acceptedParents
-                                                                                        
-                                   filter:^BOOL(id<FBXCElementSnapshot> snapshot) {
+                                   fb_parentMatchingOneOfTypes:acceptedParents                                  
+                                                        filter:^BOOL(id<FBXCElementSnapshot> snapshot) {
     return [[FBXCElementSnapshotWrapper ensureWrapped:snapshot] isWDVisible];
-                                                                                        }];
+  }];
   XCTAssertEqualObjects(scrollView.identifier, @"scrollView");
 }
 
@@ -154,11 +153,11 @@
                                @(XCUIElementTypeCollectionView),
                                @(XCUIElementTypeTable),
                                ];
-  id<FBXCElementSnapshot> scrollView = [[FBXCElementSnapshotWrapper ensureWrapped:threeStaticText.fb_takeSnapshot] fb_parentMatchingOneOfTypes:acceptedParents
-                                                                                        
-                                                                                                                                   filter:^BOOL(id<FBXCElementSnapshot> snapshot) {
-                                                                                          return NO;
-                                                                                        }];
+  id<FBXCElementSnapshot> scrollView = [[FBXCElementSnapshotWrapper ensureWrapped:threeStaticText.fb_takeSnapshot]
+                                        fb_parentMatchingOneOfTypes:acceptedParents
+                                                             filter:^BOOL(id<FBXCElementSnapshot> snapshot) {
+    return NO;
+  }];
   XCTAssertNil(scrollView);
 }
 

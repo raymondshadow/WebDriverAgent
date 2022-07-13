@@ -14,9 +14,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBXCElementSnapshotWrapper : NSObject<FBXCElementSnapshot>
 
+/*!Wrapped snapshot instance */
 @property (nonatomic, readonly) id<FBXCElementSnapshot> snapshot;
 
-- (instancetype)initWithSnapshot:(id<FBXCElementSnapshot>)snapshot;
+/**
+ Wraps the given snapshot.. If the given snapshot is already wrapped then the result remains unchanged.
+ 
+ @param snapshot snapshot instance to wrap
+ @returns wrapper instance
+ */
 + (nullable instancetype)ensureWrapped:(nullable id<FBXCElementSnapshot>)snapshot;
 
 @end

@@ -28,10 +28,9 @@
   if (nil == snapshot) {
     return nil;
   }
-  if ([(NSObject *)snapshot isKindOfClass:self.class]) {
-    return (FBXCElementSnapshotWrapper *)snapshot;
-  }
-  return [[FBXCElementSnapshotWrapper alloc] initWithSnapshot:snapshot];
+  return [(NSObject *)snapshot isKindOfClass:self.class]
+    ? (FBXCElementSnapshotWrapper *)snapshot
+    : [[FBXCElementSnapshotWrapper alloc] initWithSnapshot:snapshot];
 }
 
 - (id)forwardingTargetForSelector:(SEL)aSelector

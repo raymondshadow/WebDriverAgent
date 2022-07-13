@@ -31,7 +31,7 @@
     NSString *_bundleID;
     XCUIApplicationImpl *_applicationImplementation;
     id <XCTRunnerAutomationSession> _automationSession;
-  id/*XCElementSnapshot*/ _lastSnapshot;
+    id/*XCElementSnapshot*/ _lastSnapshot;
     XCApplicationMonitor *_applicationMonitor;
     XCAXClient_iOS *_AXClient_iOS;
 }
