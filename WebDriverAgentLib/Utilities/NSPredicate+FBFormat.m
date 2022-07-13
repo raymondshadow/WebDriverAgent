@@ -56,9 +56,7 @@
   return [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject,
                                                NSDictionary<NSString *,id> * _Nullable bindings) {
     FBXCElementSnapshotWrapper *wrappedSnapshot = [FBXCElementSnapshotWrapper ensureWrapped:evaluatedObject];
-    return [wrappedSnapshot respondsToSelector:@selector(fb_valueForWDAttributeName:)]
-      ? [wdPredicate evaluateWithObject:wrappedSnapshot]
-      : [wdPredicate evaluateWithObject:evaluatedObject];
+    return [wdPredicate evaluateWithObject:wrappedSnapshot];
   }];
 }
 
