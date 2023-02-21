@@ -2,25 +2,56 @@
   "name": "appium-webdriveragent",
   "version": "4.12.1",
   "description": "Package bundling WebDriverAgent",
+  "keywords": [
+    "Appium",
+    "iOS",
+    "WebDriver",
+    "Selenium",
+    "WebDriverAgent"
+  ],
+  "homepage": "https://github.com/appium/WebDriverAgent#readme",
+  "bugs": {
+    "url": "https://github.com/appium/WebDriverAgent/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/appium/WebDriverAgent.git"
+  },
+  "license": "Apache-2.0",
+  "author": "Appium Contributors",
   "main": "./build/index.js",
+  "files": [
+    "index.js",
+    "lib",
+    "build",
+    "Scripts/build.sh",
+    "Scripts/fetch-prebuilt-wda.js",
+    "Scripts/build-webdriveragent.js",
+    "Configurations",
+    "PrivateHeaders",
+    "WebDriverAgent.xcodeproj",
+    "WebDriverAgentLib",
+    "WebDriverAgentRunner",
+    "WebDriverAgentTests",
+    "XCTWebDriverAgentLib",
+    "CHANGELOG.md",
+    "!build/tsconfig.tsbuildinfo"
+  ],
+  "types": "build/index.d.ts",
   "scripts": {
-    "build": "rm -rf build && babel --out-dir=build/lib lib && babel --out-dir=build index.js",
+    "build": "tsc -b",
+    "clean": "npm run build -- --clean",
     "dev": "npm run build -- --watch",
-    "lint": "eslint .",
-    "lint:fix": "npm run lint -- --fix",
-    "precommit-msg": "echo 'Pre-commit checks...' && exit 0",
-    "precommit-lint": "lint-staged",
-    "prepare": "npm run build",
-    "test": "mocha --exit --timeout 1m \"./test/unit/**/*-specs.js\"",
-    "e2e-test": "mocha --exit --timeout 10m \"./test/functional/**/*-specs.js\"",
     "bundle": "npm run bundle:ios && npm run bundle:tv",
     "bundle:ios": "TARGET=runner SDK=sim node ./Scripts/build-webdriveragent.js",
     "bundle:tv": "TARGET=tv_runner SDK=tv_sim node ./Scripts/build-webdriveragent.js",
-    "fetch-prebuilt-wda": "node ./Scripts/fetch-prebuilt-wda.js"
-  },
-  "engines": {
-    "node": ">=14",
-    "npm": ">=8"
+    "e2e-test": "mocha --exit --timeout 10m \"./test/functional/**/*-specs.js\"",
+    "fetch-prebuilt-wda": "node ./Scripts/fetch-prebuilt-wda.js",
+    "lint": "eslint .",
+    "lint-staged": "lint-staged",
+    "lint:fix": "npm run lint -- --fix",
+    "prepare": "husky install && npm run build",
+    "test": "mocha \"./test/unit/**/*-specs.js\""
   },
   "lint-staged": {
     "*.js": [
@@ -32,60 +63,9 @@
     "printWidth": 100,
     "singleQuote": true
   },
-  "pre-commit": [
-    "precommit-msg",
-    "precommit-lint"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/appium/WebDriverAgent.git"
-  },
-  "keywords": [
-    "Appium",
-    "iOS",
-    "WebDriver",
-    "Selenium",
-    "WebDriverAgent"
-  ],
-  "author": "Appium Contributors",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/appium/WebDriverAgent/issues"
-  },
-  "homepage": "https://github.com/appium/WebDriverAgent#readme",
-  "devDependencies": {
-    "@appium/eslint-config-appium": "^6.0.0",
-    "@appium/test-support": "^3.0.0",
-    "@babel/cli": "^7.18.10",
-    "@babel/core": "^7.18.10",
-    "@babel/eslint-parser": "^7.18.9",
-    "@babel/plugin-transform-runtime": "^7.18.10",
-    "@babel/preset-env": "^7.18.10",
-    "@babel/register": "^7.18.9",
-    "@semantic-release/changelog": "^6.0.1",
-    "@semantic-release/git": "^10.0.1",
-    "babel-plugin-source-map-support": "^2.2.0",
-    "appium-xcode": "^5.0.0",
-    "chai": "^4.2.0",
-    "chai-as-promised": "^7.1.1",
-    "conventional-changelog-conventionalcommits": "^5.0.0",
-    "eslint": "^7.32.0",
-    "eslint-config-prettier": "^8.5.0",
-    "glob": "^8.0.1",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-mocha": "^9.0.0",
-    "eslint-plugin-promise": "^6.0.0",
-    "lint-staged": "^13.0.3",
-    "mocha": "^10.0.0",
-    "pre-commit": "^1.2.2",
-    "prettier": "^2.7.1",
-    "semantic-release": "^20.0.2",
-    "sinon": "^15.0.0"
-  },
   "dependencies": {
     "@appium/base-driver": "^9.0.0",
     "@appium/support": "^3.0.0",
-    "@babel/runtime": "^7.0.0",
     "appium-ios-simulator": "^5.0.1",
     "async-lock": "^1.0.0",
     "asyncbox": "^2.5.3",
@@ -93,24 +73,42 @@
     "bluebird": "^3.5.5",
     "lodash": "^4.17.11",
     "node-simctl": "^7.0.1",
-    "source-map-support": "^0.x",
     "teen_process": "^2.0.0"
   },
-  "files": [
-    "index.js",
-    "lib",
-    "build/index.js",
-    "build/lib",
-    "Scripts/build.sh",
-    "Scripts/fetch-prebuilt-wda.js",
-    "Scripts/build-webdriveragent.js",
-    "Configurations",
-    "PrivateHeaders",
-    "WebDriverAgent.xcodeproj",
-    "WebDriverAgentLib",
-    "WebDriverAgentRunner",
-    "WebDriverAgentTests",
-    "XCTWebDriverAgentLib",
-    "CHANGELOG.md"
-  ]
+  "devDependencies": {
+    "@appium/eslint-config-appium": "^6.0.0",
+    "@appium/test-support": "^3.0.0",
+    "@appium/tsconfig": "^0.2.4",
+    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@types/bluebird": "^3.5.38",
+    "@types/chai": "^4.3.4",
+    "@types/chai-as-promised": "^7.1.5",
+    "@types/lodash": "^4.14.191",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^18.14.0",
+    "@types/sinon": "^10.0.13",
+    "@types/teen_process": "^2.0.0",
+    "appium-xcode": "^5.0.0",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "conventional-changelog-conventionalcommits": "^5.0.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-mocha": "^9.0.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.0.3",
+    "mocha": "^10.0.0",
+    "prettier": "^2.7.1",
+    "semantic-release": "^20.0.2",
+    "sinon": "^15.0.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
+  },
+  "engines": {
+    "node": ">=14",
+    "npm": ">=8"
+  }
 }
