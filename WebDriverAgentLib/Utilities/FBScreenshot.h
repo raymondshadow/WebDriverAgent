@@ -14,11 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBScreenshot : NSObject
 
 /**
- Returns YES if the current OS SDK supports advanced screenshoting APIs (added since Xcode SDK 10)
- */
-+ (BOOL)isNewScreenshotAPISupported;
-
-/**
  Retrieves non-scaled screenshot of the whole screen
 
  @param quality The number in range 0-2, where 2 (JPG) is the lowest and 0 (PNG) is the highest quality.

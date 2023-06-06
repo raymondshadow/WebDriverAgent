@@ -9,6 +9,7 @@
 
 #import "FBScreenshot.h"
 
+@import UniformTypeIdentifiers;
 #import <MobileCoreServices/MobileCoreServices.h>
 
 #import "FBConfiguration.h"
@@ -33,16 +34,6 @@ NSString *formatTimeInterval(NSTimeInterval interval) {
 
 @implementation FBScreenshot
 
-+ (BOOL)isNewScreenshotAPISupported
-{
-  static dispatch_once_t newScreenshotAPISupported;
-  static BOOL result;
-  dispatch_once(&newScreenshotAPISupported, ^{
-    result = [(NSObject *)[FBXCTestDaemonsProxy testRunnerProxy] respondsToSelector:@selector(_XCT_requestScreenshotOfScreenWithID:withRect:uti:compressionQuality:withReply:)];
-  });
-  return result;
-}
-
 + (CGFloat)compressionQualityWithQuality:(NSUInteger)quality
 {
   switch (quality) {
@@ -55,14 +46,16 @@ NSString *formatTimeInterval(NSTimeInterval interval) {
   }
 }
 
-+ (NSString *)imageUtiWithQuality:(NSUInteger)quality
++ (UTType *)imageUtiWithQuality:(NSUInteger)quality
 {
   switch (quality) {
     case 1:
     case 2:
-      return (__bridge id)kUTTypeJPEG;
+      return UTTypeJPEG;
+    case 3:
+      return UTTypeHEIC;
     default:
-      return (__bridge id)kUTTypePNG;
+      return UTTypePNG;
   }
 }
 
@@ -70,57 +63,21 @@ NSString *formatTimeInterval(NSTimeInterval interval) {
                                            rect:(CGRect)rect
                                           error:(NSError **)error
 {
-  if ([self.class isNewScreenshotAPISupported]) {
-    XCUIScreen *mainScreen = XCUIScreen.mainScreen;
-    return [self.class takeWithScreenID:mainScreen.displayID
-                                  scale:SCREENSHOT_SCALE
-                     compressionQuality:[self.class compressionQualityWithQuality:FBConfiguration.screenshotQuality]
-                                   rect:rect
-                              sourceUTI:[self.class imageUtiWithQuality:FBConfiguration.screenshotQuality]
-                                  error:error];
-  }
-
-  [[[FBErrorBuilder builder]
-         withDescription:@"Screenshots of limited areas are only available for newer OS versions"]
-        buildError:error];
-  return nil;
+  XCUIScreen *mainScreen = XCUIScreen.mainScreen;
+  return [self.class takeWithScreenID:mainScreen.displayID
+                                scale:SCREENSHOT_SCALE
+                   compressionQuality:[self.class compressionQualityWithQuality:quality]
+                                 rect:rect
+                            sourceUTI:[self.class imageUtiWithQuality:quality].identifier
+                                error:error];
 }
 
 + (NSData *)takeInOriginalResolutionWithQuality:(NSUInteger)quality
                                           error:(NSError **)error
 {
-  if ([self.class isNewScreenshotAPISupported]) {
-    XCUIScreen *mainScreen = XCUIScreen.mainScreen;
-    return [self.class takeWithScreenID:mainScreen.displayID
-                                  scale:SCREENSHOT_SCALE
-                     compressionQuality:[self.class compressionQualityWithQuality:FBConfiguration.screenshotQuality]
-                                   rect:CGRectNull
-                              sourceUTI:[self.class imageUtiWithQuality:FBConfiguration.screenshotQuality]
-                                  error:error];
-  }
-
-  id<XCTestManager_ManagerInterface> proxy = [FBXCTestDaemonsProxy testRunnerProxy];
-  __block NSData *screenshotData = nil;
-  __block NSError *innerError = nil;
-  dispatch_semaphore_t sem = dispatch_semaphore_create(0);
-  [proxy _XCT_requestScreenshotWithReply:^(NSData *data, NSError *screenshotError) {
-    if (nil == screenshotError) {
-      screenshotData = data;
-    } else {
-      innerError = screenshotError;
-    }
-    dispatch_semaphore_signal(sem);
-  }];
-  if (nil != innerError && error) {
-    *error = innerError;
-  }
-  int64_t timeoutNs = (int64_t)(SCREENSHOT_TIMEOUT * NSEC_PER_SEC);
-  if (0 != dispatch_semaphore_wait(sem, dispatch_time(DISPATCH_TIME_NOW, timeoutNs))) {
-    [[[FBErrorBuilder builder]
-      withDescription:[NSString stringWithFormat:@"Cannot take a screenshot within %@ timeout", formatTimeInterval(SCREENSHOT_TIMEOUT)]]
-     buildError:error];
-  };
-  return screenshotData;
+  return [self.class takeInOriginalResolutionWithQuality:quality
+                                                    rect:CGRectNull
+                                                   error:error];
 }
 
 + (NSData *)takeWithScreenID:(long long)screenID
@@ -139,7 +96,7 @@ NSString *formatTimeInterval(NSTimeInterval interval) {
     return nil;
   }
   return [[[FBImageIOScaler alloc] init] scaledImageWithImage:screenshotData
-                                                          uti:(__bridge id)kUTTypePNG
+                                                          uti:UTTypePNG.identifier
                                                          rect:rect
                                                 scalingFactor:1.0 / scale
                                            compressionQuality:FBMaxCompressionQuality
@@ -156,38 +113,23 @@ NSString *formatTimeInterval(NSTimeInterval interval) {
   __block NSData *screenshotData = nil;
   __block NSError *innerError = nil;
   dispatch_semaphore_t sem = dispatch_semaphore_create(0);
-  if ([self.class shouldUseScreenshotRequestApiForProxy:(NSObject *)proxy]) {
-    id screnshotRequest = [self.class screenshotRequestWithScreenID:screenID
-                                                               rect:CGRectNull
-                                                                uti:uti
-                                                 compressionQuality:compressionQuality
-                                                              error:error];
-    if (nil == screnshotRequest) {
-      return nil;
-    }
-    [proxy _XCT_requestScreenshot:screnshotRequest
-                        withReply:^(id image, NSError *err) {
-      if (nil != err) {
-        innerError = err;
-      } else {
-        screenshotData = [image data];
-      }
-      dispatch_semaphore_signal(sem);
-    }];
-  } else {
-    [proxy _XCT_requestScreenshotOfScreenWithID:screenID
-                                       withRect:CGRectNull
-                                            uti:uti
-                             compressionQuality:compressionQuality
-                                      withReply:^(NSData *data, NSError *err) {
-      if (nil != err) {
-        innerError = err;
-      } else {
-        screenshotData = data;
-      }
-      dispatch_semaphore_signal(sem);
-    }];
+  id screnshotRequest = [self.class screenshotRequestWithScreenID:screenID
+                                                             rect:CGRectNull
+                                                              uti:uti
+                                               compressionQuality:compressionQuality
+                                                            error:error];
+  if (nil == screnshotRequest) {
+    return nil;
   }
+  [proxy _XCT_requestScreenshot:screnshotRequest
+                      withReply:^(id image, NSError *err) {
+    if (nil != err) {
+      innerError = err;
+    } else {
+      screenshotData = [image data];
+    }
+    dispatch_semaphore_signal(sem);
+  }];
   int64_t timeoutNs = (int64_t)(timeout * NSEC_PER_SEC);
   if (0 != dispatch_semaphore_wait(sem, dispatch_time(DISPATCH_TIME_NOW, timeoutNs))) {
     NSString *timeoutMsg = [NSString stringWithFormat:@"Cannot take a screenshot within %@ timeout", formatTimeInterval(SCREENSHOT_TIMEOUT)];
@@ -203,25 +145,6 @@ NSString *formatTimeInterval(NSTimeInterval interval) {
     *error = innerError;
   }
   return screenshotData;
-}
-
-+ (BOOL)shouldUseScreenshotRequestApiForProxy:(NSObject *)proxy
-{
-  static dispatch_once_t shouldUseSRApi;
-  static BOOL result;
-  dispatch_once(&shouldUseSRApi, ^{
-    if ([proxy respondsToSelector:@selector(_XCT_requestScreenshot:withReply:)]) {
-#if TARGET_OS_SIMULATOR
-      // Required to support simulators running iOS 14.4 and below with Xcode 12.5 and above due to unsupported API on the simulator side.
-      result = SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"14.5");
-#else
-      result = SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"15.0");
-#endif
-    } else {
-      result = NO;
-    }
-  });
-  return result;
 }
 
 + (nullable id)imageEncodingWithUniformTypeIdentifier:(NSString *)uti
@@ -260,7 +183,6 @@ NSString *formatTimeInterval(NSTimeInterval interval) {
                           compressionQuality:(CGFloat)compressionQuality
                                        error:(NSError **)error
 {
-  // TODO: Use native accessors after we drop the support of Xcode 12.4 and below
   id imageEncoding = [self.class imageEncodingWithUniformTypeIdentifier:uti
                                                      compressionQuality:compressionQuality
                                                                   error:error];

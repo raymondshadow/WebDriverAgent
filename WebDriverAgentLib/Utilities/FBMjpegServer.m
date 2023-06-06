@@ -72,11 +72,6 @@ static const char *QUEUE_NAME = "JPEG Screenshots Provider Queue";
 
 - (void)streamScreenshot
 {
-  if (![self.class canStreamScreenshots]) {
-    [FBLogger log:@"MJPEG server cannot start because the current iOS version is not supported"];
-    return;
-  }
-
   NSUInteger framerate = FBConfiguration.mjpegServerFramerate;
   uint64_t timerInterval = (uint64_t)(1.0 / ((0 == framerate || framerate > MAX_FPS) ? MAX_FPS : framerate) * NSEC_PER_SEC);
   uint64_t timeStarted = clock_gettime_nsec_np(CLOCK_MONOTONIC_RAW);
@@ -130,11 +125,6 @@ static const char *QUEUE_NAME = "JPEG Screenshots Provider Queue";
       [client writeData:chunk withTimeout:-1 tag:0];
     }
   }
-}
-
-+ (BOOL)canStreamScreenshots
-{
-  return [FBScreenshot isNewScreenshotAPISupported];
 }
 
 - (void)didClientConnect:(GCDAsyncSocket *)newClient
