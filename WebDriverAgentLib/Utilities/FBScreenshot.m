@@ -68,7 +68,7 @@ NSString *formatTimeInterval(NSTimeInterval interval) {
                                 scale:SCREENSHOT_SCALE
                    compressionQuality:[self.class compressionQualityWithQuality:quality]
                                  rect:rect
-                            sourceUTI:[self.class imageUtiWithQuality:quality].identifier
+                            sourceUTI:[self.class imageUtiWithQuality:quality]
                                 error:error];
 }
 
@@ -84,7 +84,7 @@ NSString *formatTimeInterval(NSTimeInterval interval) {
                        scale:(CGFloat)scale
           compressionQuality:(CGFloat)compressionQuality
                         rect:(CGRect)rect
-                   sourceUTI:(NSString *)uti
+                   sourceUTI:(UTType *)uti
                        error:(NSError **)error
 {
   NSData *screenshotData = [self.class takeInOriginalResolutionWithScreenID:screenID
@@ -96,7 +96,7 @@ NSString *formatTimeInterval(NSTimeInterval interval) {
     return nil;
   }
   return [[[FBImageIOScaler alloc] init] scaledImageWithImage:screenshotData
-                                                          uti:UTTypePNG.identifier
+                                                          uti:UTTypePNG
                                                          rect:rect
                                                 scalingFactor:1.0 / scale
                                            compressionQuality:FBMaxCompressionQuality
@@ -105,7 +105,7 @@ NSString *formatTimeInterval(NSTimeInterval interval) {
 
 + (NSData *)takeInOriginalResolutionWithScreenID:(long long)screenID
                               compressionQuality:(CGFloat)compressionQuality
-                                             uti:(NSString *)uti
+                                             uti:(UTType *)uti
                                          timeout:(NSTimeInterval)timeout
                                            error:(NSError **)error
 {
@@ -147,7 +147,7 @@ NSString *formatTimeInterval(NSTimeInterval interval) {
   return screenshotData;
 }
 
-+ (nullable id)imageEncodingWithUniformTypeIdentifier:(NSString *)uti
++ (nullable id)imageEncodingWithUniformTypeIdentifier:(UTType *)uti
                                    compressionQuality:(CGFloat)compressionQuality
                                                 error:(NSError **)error
 {
@@ -159,7 +159,7 @@ NSString *formatTimeInterval(NSTimeInterval interval) {
     return nil;
   }
 
-  if ([uti isEqualToString:UTTypeHEIC.identifier]) {
+  if ([uti conformsToType:UTTypeHEIC]) {
     static BOOL isHeicSuppported = NO;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -174,7 +174,7 @@ NSString *formatTimeInterval(NSTimeInterval interval) {
     });
     if (!isHeicSuppported) {
       [FBLogger logFmt:@"The device under test does not support HEIC image encoding. Falling back to PNG"];
-      uti = UTTypePNG.identifier;
+      uti = UTTypePNG;
     }
   }
 
@@ -189,7 +189,8 @@ NSString *formatTimeInterval(NSTimeInterval interval) {
   NSMethodSignature *imageEncodingContructorSignature = [imageEncodingAllocated methodSignatureForSelector:imageEncodingConstructorSelector];
   NSInvocation *imageEncodingInitInvocation = [NSInvocation invocationWithMethodSignature:imageEncodingContructorSignature];
   [imageEncodingInitInvocation setSelector:imageEncodingConstructorSelector];
-  [imageEncodingInitInvocation setArgument:&uti atIndex:2];
+  NSString *utiIdentifier = uti.identifier;
+  [imageEncodingInitInvocation setArgument:&utiIdentifier atIndex:2];
   [imageEncodingInitInvocation setArgument:&compressionQuality atIndex:3];
   [imageEncodingInitInvocation invokeWithTarget:imageEncodingAllocated];
   id __unsafe_unretained imageEncoding;
@@ -199,7 +200,7 @@ NSString *formatTimeInterval(NSTimeInterval interval) {
 
 + (nullable id)screenshotRequestWithScreenID:(long long)screenID
                                         rect:(struct CGRect)rect
-                                         uti:(NSString *)uti
+                                         uti:(UTType *)uti
                           compressionQuality:(CGFloat)compressionQuality
                                        error:(NSError **)error
 {

@@ -8,6 +8,7 @@
  */
 
 #import <XCTest/XCTest.h>
+@class UTType;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -48,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (nullable NSData *)takeInOriginalResolutionWithScreenID:(long long)screenID
                                        compressionQuality:(CGFloat)compressionQuality
-                                                      uti:(NSString *)uti
+                                                      uti:(UTType *)uti
                                                   timeout:(NSTimeInterval)timeout
                                                     error:(NSError **)error;
 

@@ -10,7 +10,7 @@
 #import "FBMjpegServer.h"
 
 #import <mach/mach_time.h>
-#import <MobileCoreServices/MobileCoreServices.h>
+@import UniformTypeIdentifiers;
 
 #import "GCDAsyncSocket.h"
 #import "FBApplication.h"
@@ -91,7 +91,7 @@ static const char *QUEUE_NAME = "JPEG Screenshots Provider Queue";
   NSError *error;
   NSData *screenshotData = [FBScreenshot takeInOriginalResolutionWithScreenID:self.mainScreenID
                                                            compressionQuality:screenshotCompressionQuality
-                                                                          uti:(__bridge id)kUTTypeJPEG
+                                                                          uti:UTTypeJPEG
                                                                       timeout:FRAME_TIMEOUT
                                                                         error:&error];
   if (nil == screenshotData) {
@@ -102,7 +102,6 @@ static const char *QUEUE_NAME = "JPEG Screenshots Provider Queue";
 
   if (usesScaling) {
     [self.imageScaler submitImage:screenshotData
-                              uti:(__bridge id)kUTTypeJPEG
                     scalingFactor:scalingFactor
                compressionQuality:compressionQuality
                 completionHandler:^(NSData * _Nonnull scaled) {
