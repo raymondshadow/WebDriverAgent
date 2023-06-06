@@ -158,6 +158,26 @@ NSString *formatTimeInterval(NSTimeInterval interval) {
      buildError:error];
     return nil;
   }
+
+  if ([uti isEqualToString:UTTypeHEIC.identifier]) {
+    static BOOL isHeicSuppported = NO;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+      SEL selector = NSSelectorFromString(@"supportsHEICImageEncoding");
+      NSMethodSignature *signature = [imageEncodingClass methodSignatureForSelector:selector];
+      if (nil != signature) {
+        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+        [invocation setSelector:selector];
+        [invocation invokeWithTarget:imageEncodingClass];
+        [invocation getReturnValue:&isHeicSuppported];
+      }
+    });
+    if (!isHeicSuppported) {
+      [FBLogger logFmt:@"The device under test does not support HEIC image encoding. Falling back to PNG"];
+      uti = UTTypePNG.identifier;
+    }
+  }
+
   id imageEncodingAllocated = [imageEncodingClass alloc];
   SEL imageEncodingConstructorSelector = NSSelectorFromString(@"initWithUniformTypeIdentifier:compressionQuality:");
   if (![imageEncodingAllocated respondsToSelector:imageEncodingConstructorSelector]) {
