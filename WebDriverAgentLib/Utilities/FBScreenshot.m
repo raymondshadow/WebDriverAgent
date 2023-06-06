@@ -10,7 +10,6 @@
 #import "FBScreenshot.h"
 
 @import UniformTypeIdentifiers;
-#import <MobileCoreServices/MobileCoreServices.h>
 
 #import "FBConfiguration.h"
 #import "FBErrorBuilder.h"
