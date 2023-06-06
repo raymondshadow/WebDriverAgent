@@ -163,7 +163,7 @@ const CGFloat FBMaxCompressionQuality = 1.0f;
 {
   NSMutableData *newImageData = [NSMutableData data];
   CGImageDestinationRef imageDestination = CGImageDestinationCreateWithData(
-                                                                            (CFMutableDataRef)newImageData,
+                                                                            (__bridge CFMutableDataRef) newImageData,
                                                                             (__bridge CFStringRef) UTTypeJPEG.identifier,
                                                                             1,
                                                                             NULL);
