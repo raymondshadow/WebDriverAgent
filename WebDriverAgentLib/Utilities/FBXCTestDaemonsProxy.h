@@ -12,6 +12,7 @@
 #if !TARGET_OS_TV
 #import <CoreLocation/CoreLocation.h>
 #endif
+@class FBScreenRecordingRequest, FBScreenRecordingPromise;
 
 #import "XCSynthesizedEventRecord.h"
 
@@ -34,6 +35,11 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable CLLocation *)getSimulatedLocation:(NSError **)error;
 + (BOOL)clearSimulatedLocation:(NSError **)error;
 #endif
+
++ (nullable FBScreenRecordingPromise *)startScreenRecordingWithRequest:(FBScreenRecordingRequest *)request
+                                                                 error:(NSError **)error;
++ (BOOL)stopScreenRecordingWithUUID:(NSUUID *)uuid
+                              error:(NSError **)error;
 
 @end
 

@@ -11,6 +11,7 @@
 
 @class FBApplication;
 @class FBElementCache;
+@class FBScreenRecordingPromise;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -33,6 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*! The action to apply to unexpected alerts. Either "accept"/"dismiss" or nil/empty string (by default) to do nothing */
 @property (nonatomic, nullable) NSString *defaultAlertAction;
+
+/*! The active screen recording session if present */
+@property (nonatomic, nullable) FBScreenRecordingPromise *activeScreenRecording;
 
 /*! Whether to use the native caching strategy for elements or the custom one: https://discuss.appium.io/t/elements-state-coming-from-xpath-vs-ios-predicate-string/34016 */
 @property (nonatomic) BOOL useNativeCachingStrategy;

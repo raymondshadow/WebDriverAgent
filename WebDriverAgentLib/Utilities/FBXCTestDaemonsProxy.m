@@ -16,6 +16,8 @@
 #import "FBExceptions.h"
 #import "FBLogger.h"
 #import "FBRunLoopSpinner.h"
+#import "FBScreenRecordingPromise.h"
+#import "FBScreenRecordingRequest.h"
 #import "XCTestDriver.h"
 #import "XCTRunnerDaemonSession.h"
 #import "XCUIApplication.h"
@@ -100,13 +102,12 @@ static void swizzledLaunchApp(id self, SEL _cmd, NSString *path, NSString *bundl
 
 + (BOOL)synthesizeEventWithRecord:(XCSynthesizedEventRecord *)record error:(NSError *__autoreleasing*)error
 {
-  __block BOOL didSucceed = NO;
+  __block NSError *innerError = nil;
   [FBRunLoopSpinner spinUntilCompletion:^(void(^completion)(void)){
     void (^errorHandler)(NSError *) = ^(NSError *invokeError) {
-      if (error) {
-        *error = invokeError;
+      if (nil != invokeError) {
+        innerError = invokeError;
       }
-      didSucceed = (invokeError == nil);
       completion();
     };
 
@@ -117,7 +118,10 @@ static void swizzledLaunchApp(id self, SEL _cmd, NSString *path, NSString *bundl
       handlerBlock(record, invokeError);
     }];
   }];
-  return didSucceed;
+  if (nil != innerError && error) {
+    *error = innerError;
+  }
+  return nil == innerError;
 }
 
 + (BOOL)openURL:(NSURL *)url usingApplication:(NSString *)bundleId error:(NSError *__autoreleasing*)error
@@ -132,16 +136,21 @@ static void swizzledLaunchApp(id self, SEL _cmd, NSString *path, NSString *bundl
     return NO;
   }
 
+  __block NSError *innerError = nil;
   __block BOOL didSucceed = NO;
   [FBRunLoopSpinner spinUntilCompletion:^(void(^completion)(void)){
     [session openURL:url usingApplication:bundleId completion:^(bool result, NSError *invokeError) {
-      if (error) {
-        *error = invokeError;
+      if (nil != invokeError) {
+        innerError = invokeError;
+      } else {
+        didSucceed = result;
       }
-      didSucceed = invokeError == nil && result;
       completion();
     }];
   }];
+  if (nil != innerError && error) {
+    *error = innerError;
+  }
   return didSucceed;
 }
 
@@ -157,16 +166,21 @@ static void swizzledLaunchApp(id self, SEL _cmd, NSString *path, NSString *bundl
     return NO;
   }
 
+  __block NSError *innerError = nil;
   __block BOOL didSucceed = NO;
   [FBRunLoopSpinner spinUntilCompletion:^(void(^completion)(void)){
     [session openDefaultApplicationForURL:url completion:^(bool result, NSError *invokeError) {
-      if (error) {
-        *error = invokeError;
+      if (nil != invokeError) {
+        innerError = invokeError;
+      } else {
+        didSucceed = result;
       }
-      didSucceed = invokeError == nil && result;
       completion();
     }];
   }];
+  if (nil != innerError && error) {
+    *error = innerError;
+  }
   return didSucceed;
 }
 
@@ -192,15 +206,20 @@ static void swizzledLaunchApp(id self, SEL _cmd, NSString *path, NSString *bundl
   }
 
   __block BOOL didSucceed = NO;
+  __block NSError *innerError = nil;
   [FBRunLoopSpinner spinUntilCompletion:^(void(^completion)(void)){
     [session setSimulatedLocation:location completion:^(bool result, NSError *invokeError) {
-      if (error) {
-        *error = invokeError;
+      if (nil != invokeError) {
+        innerError = invokeError;
+      } else {
+        didSucceed = result;
       }
-      didSucceed = invokeError == nil && result;
       completion();
     }];
   }];
+  if (nil != innerError && error) {
+    *error = innerError;
+  }
   return didSucceed;
 }
 
@@ -225,17 +244,20 @@ static void swizzledLaunchApp(id self, SEL _cmd, NSString *path, NSString *bundl
   }
 
   __block CLLocation *location = nil;
+  __block NSError *innerError = nil;
   [FBRunLoopSpinner spinUntilCompletion:^(void(^completion)(void)){
     [session getSimulatedLocationWithReply:^(CLLocation *reply, NSError *invokeError) {
-      if (error) {
-        *error = invokeError;
-      }
-      if (nil == invokeError) {
+      if (nil != invokeError) {
+        innerError = invokeError;
+      } else {
         location = reply;
       }
       completion();
     }];
   }];
+  if (nil != innerError && error) {
+    *error = innerError;
+  }
   return location;
 }
 
@@ -260,17 +282,105 @@ static void swizzledLaunchApp(id self, SEL _cmd, NSString *path, NSString *bundl
   }
 
   __block BOOL didSucceed = NO;
+  __block NSError *innerError = nil;
   [FBRunLoopSpinner spinUntilCompletion:^(void(^completion)(void)){
     [session clearSimulatedLocationWithReply:^(bool result, NSError *invokeError) {
-      if (error) {
-        *error = invokeError;
+      if (nil != invokeError) {
+        innerError = invokeError;
+      } else {
+        didSucceed = result;
       }
-      didSucceed = invokeError == nil && result;
       completion();
     }];
   }];
+  if (nil != innerError && error) {
+    *error = innerError;
+  }
   return didSucceed;
 }
 #endif
+
++ (FBScreenRecordingPromise *)startScreenRecordingWithRequest:(FBScreenRecordingRequest *)request
+                                                        error:(NSError *__autoreleasing*)error
+{
+  XCTRunnerDaemonSession *session = [XCTRunnerDaemonSession sharedSession];
+  if (![session respondsToSelector:@selector(startScreenRecordingWithRequest:withReply:)]) {
+    if (error) {
+      [[[FBErrorBuilder builder]
+        withDescriptionFormat:@"The current Xcode SDK does not support screen recording. Consider upgrading to Xcode 15+/iOS 17+"]
+       buildError:error];
+    }
+    return nil;
+  }
+  if (![session supportsScreenRecording]) {
+    if (error) {
+      [[[FBErrorBuilder builder]
+        withDescriptionFormat:@"Your device does not support screen recording"]
+       buildError:error];
+    }
+    return nil;
+  }
+
+  id nativeRequest = [request toNativeRequestWithError:error];
+  if (nil == nativeRequest) {
+    return nil;
+  }
+
+  __block id futureMetadata = nil;
+  __block NSError *innerError = nil;
+  [FBRunLoopSpinner spinUntilCompletion:^(void(^completion)(void)){
+    [session startScreenRecordingWithRequest:nativeRequest withReply:^(id reply, NSError *invokeError) {
+      if (nil == invokeError) {
+        futureMetadata = reply;
+      } else {
+        innerError = invokeError;
+      }
+      completion();
+    }];
+  }];
+  if (nil != innerError) {
+    if (error) {
+      *error = innerError;
+    }
+    return nil;
+  }
+  return [[FBScreenRecordingPromise alloc] initWithNativePromise:futureMetadata];
+}
+
++ (BOOL)stopScreenRecordingWithUUID:(NSUUID *)uuid error:(NSError *__autoreleasing*)error
+{
+  XCTRunnerDaemonSession *session = [XCTRunnerDaemonSession sharedSession];
+  if (![session respondsToSelector:@selector(stopScreenRecordingWithUUID:withReply:)]) {
+    if (error) {
+      [[[FBErrorBuilder builder]
+        withDescriptionFormat:@"The current Xcode SDK does not support screen recording. Consider upgrading to Xcode 15+/iOS 17+"]
+       buildError:error];
+    }
+    return NO;
+  }
+  if (![session supportsScreenRecording]) {
+    if (error) {
+      [[[FBErrorBuilder builder]
+        withDescriptionFormat:@"Your device does not support screen recording"]
+       buildError:error];
+    }
+    return NO;
+  }
+
+  __block NSError *innerError = nil;
+  [FBRunLoopSpinner spinUntilCompletion:^(void(^completion)(void)){
+    [session stopScreenRecordingWithUUID:uuid withReply:^(NSError *invokeError) {
+      if (nil != invokeError) {
+        innerError = invokeError;
+      }
+      completion();
+    }];
+  }];
+  if (nil != innerError && error) {
+    *error = innerError;
+  }
+  return nil == innerError;
+}
+
 
 @end

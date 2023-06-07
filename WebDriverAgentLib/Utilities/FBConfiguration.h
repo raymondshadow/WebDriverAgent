@@ -53,6 +53,8 @@ extern NSString *const FBSnapshotMaxDepthKey;
 /*! Enables XCTest automated screenshots taking */
 + (void)enableScreenshots;
 
++ (void)disableDiagnosticScreenRecordings;
+
 /* The maximum typing frequency for all typing activities */
 + (void)setMaxTypingFrequency:(NSUInteger)value;
 + (NSUInteger)maxTypingFrequency;

@@ -26,6 +26,7 @@
   [FBConfiguration disableRemoteQueryEvaluation];
   [FBConfiguration configureDefaultKeyboardPreferences];
   [FBConfiguration disableApplicationUIInterruptionsHandling];
+  [FBConfiguration disableDiagnosticScreenRecordings];
   if (NSProcessInfo.processInfo.environment[@"ENABLE_AUTOMATIC_SCREENSHOTS"]) {
     [FBConfiguration enableScreenshots];
   } else {
