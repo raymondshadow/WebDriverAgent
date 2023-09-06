@@ -502,6 +502,11 @@
 		71F5BE50252F14EB00EE9EBA /* FBExceptions.h in Headers */ = {isa = PBXBuildFile; fileRef = 71F5BE4D252F14EB00EE9EBA /* FBExceptions.h */; };
 		71F5BE51252F14EB00EE9EBA /* FBExceptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 71F5BE4E252F14EB00EE9EBA /* FBExceptions.m */; };
 		71F5BE52252F14EB00EE9EBA /* FBExceptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 71F5BE4E252F14EB00EE9EBA /* FBExceptions.m */; };
+		7308AF442AA811C70062715C /* GVIVideoAutoTestRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7308AF432AA811C70062715C /* GVIVideoAutoTestRunner.swift */; };
+		7308AF4C2AA811D80062715C /* WebDriverAgentLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE158A991CBD452B00A3E3F0 /* WebDriverAgentLib.framework */; };
+		7308AF4E2AA811DE0062715C /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7308AF4D2AA811DD0062715C /* libxml2.tbd */; };
+		7308AF512AA812190062715C /* WebDriverAgentLib.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = EE158A991CBD452B00A3E3F0 /* WebDriverAgentLib.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		7308AF582AA814BA0062715C /* AutoRunServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7308AF572AA814BA0062715C /* AutoRunServices.swift */; };
 		AD35D06C1CF1C35500870A75 /* WebDriverAgentLib.framework in Copy frameworks */ = {isa = PBXBuildFile; fileRef = EE158A991CBD452B00A3E3F0 /* WebDriverAgentLib.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AD6C26941CF2379700F8B5FF /* FBAlert.h in Headers */ = {isa = PBXBuildFile; fileRef = AD6C26921CF2379700F8B5FF /* FBAlert.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AD6C26951CF2379700F8B5FF /* FBAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = AD6C26931CF2379700F8B5FF /* FBAlert.m */; };
@@ -809,6 +814,13 @@
 			remoteGlobalIDString = 641EE5D52240C5CA00173FCB;
 			remoteInfo = WebDriverAgentLib_tvOS;
 		};
+		7308AF4A2AA811D20062715C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 91F9DAE11B99DBC2001349B2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EE158A981CBD452B00A3E3F0;
+			remoteInfo = WebDriverAgentLib;
+		};
 		AD8D96F01D3C12960061268E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 91F9DAE11B99DBC2001349B2 /* Project object */;
@@ -877,6 +889,17 @@
 				641EE6FD2240C61D00173FCB /* WebDriverAgentLib_tvOS.framework in Copy frameworks */,
 			);
 			name = "Copy frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7308AF502AA811EF0062715C /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				7308AF512AA812190062715C /* WebDriverAgentLib.framework in Copy Frameworks */,
+			);
+			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		EE93CFF41CCA501300708122 /* Copy frameworks */ = {
@@ -1069,6 +1092,11 @@
 		71F5BE33252E5B2200EE9EBA /* FBElementSwipingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBElementSwipingTests.m; sourceTree = "<group>"; };
 		71F5BE4D252F14EB00EE9EBA /* FBExceptions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBExceptions.h; sourceTree = "<group>"; };
 		71F5BE4E252F14EB00EE9EBA /* FBExceptions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBExceptions.m; sourceTree = "<group>"; };
+		7308AF412AA811C70062715C /* GVIVideoAutoTestRunner.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GVIVideoAutoTestRunner.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7308AF432AA811C70062715C /* GVIVideoAutoTestRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GVIVideoAutoTestRunner.swift; sourceTree = "<group>"; };
+		7308AF4D2AA811DD0062715C /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk/usr/lib/libxml2.tbd; sourceTree = DEVELOPER_DIR; };
+		7308AF522AA813FF0062715C /* GVIVideoAutoTestRunner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GVIVideoAutoTestRunner-Bridging-Header.h"; sourceTree = "<group>"; };
+		7308AF572AA814BA0062715C /* AutoRunServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoRunServices.swift; sourceTree = "<group>"; };
 		AD42DD2A1CF121E600806E5D /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		AD6C26921CF2379700F8B5FF /* FBAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBAlert.h; path = WebDriverAgentLib/FBAlert.h; sourceTree = SOURCE_ROOT; };
 		AD6C26931CF2379700F8B5FF /* FBAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = FBAlert.m; path = WebDriverAgentLib/FBAlert.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -1390,6 +1418,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7308AF3E2AA811C70062715C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7308AF4E2AA811DE0062715C /* libxml2.tbd in Frameworks */,
+				7308AF4C2AA811D80062715C /* WebDriverAgentLib.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EE158A951CBD452B00A3E3F0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1550,6 +1587,24 @@
 			name = CocoaAsyncSocket;
 			sourceTree = "<group>";
 		};
+		7308AF422AA811C70062715C /* GVIVideoAutoTestRunner */ = {
+			isa = PBXGroup;
+			children = (
+				7308AF562AA8142F0062715C /* AutoRunServices */,
+				7308AF432AA811C70062715C /* GVIVideoAutoTestRunner.swift */,
+				7308AF522AA813FF0062715C /* GVIVideoAutoTestRunner-Bridging-Header.h */,
+			);
+			path = GVIVideoAutoTestRunner;
+			sourceTree = "<group>";
+		};
+		7308AF562AA8142F0062715C /* AutoRunServices */ = {
+			isa = PBXGroup;
+			children = (
+				7308AF572AA814BA0062715C /* AutoRunServices.swift */,
+			);
+			path = AutoRunServices;
+			sourceTree = "<group>";
+		};
 		91F9DAE01B99DBC2001349B2 = {
 			isa = PBXGroup;
 			children = (
@@ -1560,6 +1615,7 @@
 				EE9B75F91CF7964100275851 /* WebDriverAgentTests */,
 				EEF988341C486655005CA669 /* WebDriverAgentRunner */,
 				EE9AB8021CAEE182008C271F /* Scripts */,
+				7308AF422AA811C70062715C /* GVIVideoAutoTestRunner */,
 				91F9DAEA1B99DBC2001349B2 /* Products */,
 				B6E83A410C45944B036B6B0F /* Frameworks */,
 				AD42DD291CF121E600806E5D /* Modules */,
@@ -1582,6 +1638,7 @@
 				641EE2DA2240BBE300173FCB /* WebDriverAgentRunner_tvOS.xctest */,
 				641EE6F82240C5CA00173FCB /* WebDriverAgentLib_tvOS.framework */,
 				64B264F9228C50E0002A5025 /* UnitTests_tvOS.xctest */,
+				7308AF412AA811C70062715C /* GVIVideoAutoTestRunner.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1622,6 +1679,7 @@
 		B6E83A410C45944B036B6B0F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7308AF4D2AA811DD0062715C /* libxml2.tbd */,
 				716C9341224D5369004B8542 /* iOS */,
 				716C9340224D5358004B8542 /* tvOS */,
 			);
@@ -2414,7 +2472,6 @@
 				641EE6C02240C5CA00173FCB /* XCUIApplication+FBHelpers.h in Headers */,
 				641EE6C12240C5CA00173FCB /* _XCTestObservationCenterImplementation.h in Headers */,
 				714EAA0E2673FDFE005C5B47 /* FBCapabilities.h in Headers */,
-				716F0DA22A16CA1000CDD977 /* NSDictionary+FBUtf8SafeDictionary.h in Headers */,
 				641EE6C22240C5CA00173FCB /* XCUIDevice+FBHelpers.h in Headers */,
 				71D3B3D6267FC7260076473D /* XCUIElement+FBResolve.h in Headers */,
 				641EE6C32240C5CA00173FCB /* FBClassChainQueryParser.h in Headers */,
@@ -2769,6 +2826,25 @@
 			productReference = 64B264F9228C50E0002A5025 /* UnitTests_tvOS.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		7308AF402AA811C70062715C /* GVIVideoAutoTestRunner */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7308AF472AA811C70062715C /* Build configuration list for PBXNativeTarget "GVIVideoAutoTestRunner" */;
+			buildPhases = (
+				7308AF3D2AA811C70062715C /* Sources */,
+				7308AF3E2AA811C70062715C /* Frameworks */,
+				7308AF3F2AA811C70062715C /* Resources */,
+				7308AF502AA811EF0062715C /* Copy Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7308AF4B2AA811D20062715C /* PBXTargetDependency */,
+			);
+			name = GVIVideoAutoTestRunner;
+			productName = GVIVideoAutoTestRunner;
+			productReference = 7308AF412AA811C70062715C /* GVIVideoAutoTestRunner.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		EE158A981CBD452B00A3E3F0 /* WebDriverAgentLib */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EE158AA01CBD452B00A3E3F0 /* Build configuration list for PBXNativeTarget "WebDriverAgentLib" */;
@@ -2904,7 +2980,7 @@
 		91F9DAE11B99DBC2001349B2 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1020;
+				LastSwiftUpdateCheck = 1420;
 				LastUpgradeCheck = 1310;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
@@ -2916,6 +2992,10 @@
 					};
 					64B264F8228C50E0002A5025 = {
 						CreatedOnToolsVersion = 10.2.1;
+					};
+					7308AF402AA811C70062715C = {
+						CreatedOnToolsVersion = 14.2;
+						LastSwiftMigration = 1420;
 					};
 					EE158A981CBD452B00A3E3F0 = {
 						CreatedOnToolsVersion = 7.3;
@@ -2958,6 +3038,7 @@
 				EE5095DD1EBCC9090028E2FE /* IntegrationTests_2 */,
 				EE2202031ECC612200A29571 /* IntegrationTests_3 */,
 				EE9B75D31CF7956C00275851 /* IntegrationApp */,
+				7308AF402AA811C70062715C /* GVIVideoAutoTestRunner */,
 			);
 		};
 /* End PBXProject section */
@@ -2978,6 +3059,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		64B264F7228C50E0002A5025 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7308AF3F2AA811C70062715C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3117,7 +3205,6 @@
 				641EE5FF2240C5CA00173FCB /* XCUIElement+FBForceTouch.m in Sources */,
 				716C9E0327315EFF005AD475 /* XCUIApplication+FBUIInterruptions.m in Sources */,
 				641EE6002240C5CA00173FCB /* FBTouchActionCommands.m in Sources */,
-				716F0DA42A16CA1000CDD977 /* NSDictionary+FBUtf8SafeDictionary.m in Sources */,
 				719DCF182601EAFB000E765F /* FBNotificationsHelper.m in Sources */,
 				714EAA102673FDFE005C5B47 /* FBCapabilities.m in Sources */,
 				641EE6012240C5CA00173FCB /* FBImageIOScaler.m in Sources */,
@@ -3172,8 +3259,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				64B26508228C5514002A5025 /* XCUIElementDouble.m in Sources */,
-				716F0DA72A17323300CDD977 /* NSDictionaryFBUtf8SafeTests.m in Sources */,
 				64B26504228C5299002A5025 /* FBTVNavigationTrackerTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7308AF3D2AA811C70062715C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7308AF582AA814BA0062715C /* AutoRunServices.swift in Sources */,
+				7308AF442AA811C70062715C /* GVIVideoAutoTestRunner.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3427,6 +3522,11 @@
 			isa = PBXTargetDependency;
 			target = 641EE5D52240C5CA00173FCB /* WebDriverAgentLib_tvOS */;
 			targetProxy = 64B264FF228C50E0002A5025 /* PBXContainerItemProxy */;
+		};
+		7308AF4B2AA811D20062715C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EE158A981CBD452B00A3E3F0 /* WebDriverAgentLib */;
+			targetProxy = 7308AF4A2AA811D20062715C /* PBXContainerItemProxy */;
 		};
 		AD8D96F11D3C12960061268E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3773,6 +3873,76 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
+			};
+			name = Release;
+		};
+		7308AF482AA811C70062715C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 6AB4K6G5HN;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sobey.GVIVideoAutoTestRunner;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "GVIVideoAutoTestRunner/GVIVideoAutoTestRunner-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7308AF492AA811C70062715C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6AB4K6G5HN;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sobey.GVIVideoAutoTestRunner;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "GVIVideoAutoTestRunner/GVIVideoAutoTestRunner-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -4140,7 +4310,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
+				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 6AB4K6G5HN;
 				INFOPLIST_FILE = WebDriverAgentTests/IntegrationApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4148,6 +4321,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.IntegrationApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = DevCommonProfile;
 			};
 			name = Debug;
 		};
@@ -4157,6 +4332,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 6AB4K6G5HN;
 				INFOPLIST_FILE = WebDriverAgentTests/IntegrationApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4165,6 +4343,8 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.IntegrationApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = DevCommonProfile;
 			};
 			name = Release;
 		};
@@ -4211,7 +4391,10 @@
 			baseConfigurationReference = EEE5CABF1C80361500CBBDD9 /* IOSSettings.xcconfig */;
 			buildSettings = {
 				CLANG_STATIC_ANALYZER_MODE = deep;
+				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 6AB4K6G5HN;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = WebDriverAgentRunner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -4225,6 +4408,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.WebDriverAgentRunner;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = DevCommonProfile;
 				USES_XCTRUNNER = YES;
 				WARNING_CFLAGS = (
 					"$(inherited)",
@@ -4259,6 +4444,9 @@
 			baseConfigurationReference = EEE5CABF1C80361500CBBDD9 /* IOSSettings.xcconfig */;
 			buildSettings = {
 				CLANG_STATIC_ANALYZER_MODE = deep;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 6AB4K6G5HN;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = WebDriverAgentRunner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -4273,6 +4461,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.WebDriverAgentRunner;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = DevCommonProfile;
 				USES_XCTRUNNER = YES;
 				WARNING_CFLAGS = (
 					"$(inherited)",
@@ -4328,6 +4518,15 @@
 			buildConfigurations = (
 				64B26502228C50E0002A5025 /* Debug */,
 				64B26503228C50E0002A5025 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7308AF472AA811C70062715C /* Build configuration list for PBXNativeTarget "GVIVideoAutoTestRunner" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7308AF482AA811C70062715C /* Debug */,
+				7308AF492AA811C70062715C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
