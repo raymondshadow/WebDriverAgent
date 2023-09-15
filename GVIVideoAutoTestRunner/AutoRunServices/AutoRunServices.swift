@@ -9,14 +9,13 @@
 import UIKit
 
 class AutoRunServices: NSObject {
-  
   static let shared = AutoRunServices()
+  private var runners: [GVIRunnerProtocol] = []
   
   func start() {
     let app = FBApplication.fb_activeApplication(withDefaultBundleId: "com.sobey.JiangXiTV")
-    app.cells.element(boundBy: 0).tap()
-    
-    let timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) {[weak self] _ in
+    registerRunner(app: app)
+    let timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {[weak self] _ in
       self?.timerRun(app: app)
     }
     
@@ -24,10 +23,18 @@ class AutoRunServices: NSObject {
   }
   
   private func timerRun(app: FBApplication) {
-    let size = app.frame.size
-    let offset = CGVector(dx: CGFloat(arc4random() % UInt32(size.width)), dy: CGFloat(arc4random() % UInt32(size.height)))
-    let tapCoordinate = app.coordinate(withNormalizedOffset: .zero).withOffset(offset)
-    tapCoordinate.tap()
-    print("--- auto services:", offset)
+    runners.filter {
+      $0.type == .randomClick
+    }.first?.run()
+  }
+}
+
+extension AutoRunServices {
+  private func registerRunner(app: FBApplication) {
+    let buttonRunner = GVIButtonRunner(app: app)
+    runners.append(buttonRunner)
+    
+    let radomRunner = GVIAutoRandomClickRunner(app: app)
+    runners.append(radomRunner)
   }
 }
